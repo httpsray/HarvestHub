@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>Create Account - Harvest Hub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .custom-green { color: #285508; }
+    
+    /* Prevent horizontal overflow */
+    html, body {
+      overflow-x: hidden;
+      width: 100%;
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    
+    /* Additional overflow prevention */
+    .main-container {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: hidden;
+      display: flex;
+      height: 100vh;
+    }
+    
+    .left-section, .right-section {
+      width: 50%;
+      max-width: 50%;
+      overflow: hidden;
+    }
+    
+    /* Leaf Animations */
+    @keyframes gentle-sway {
+      0%, 100% { transform: translateX(0) rotate(0deg); }
+      25% { transform: translateX(-8px) rotate(-2deg); }
+      50% { transform: translateX(0) rotate(0deg); }
+      75% { transform: translateX(8px) rotate(2deg); }
+    }
+    
+    @keyframes float-drift {
+      0%, 100% { transform: translateY(0) translateX(0) rotate(0deg); }
+      33% { transform: translateY(-10px) translateX(5px) rotate(3deg); }
+      66% { transform: translateY(-5px) translateX(-3px) rotate(-2deg); }
+    }
+    
+    /* Leaf Classes */
+    .leaf-sway {
+      animation: gentle-sway 6s ease-in-out infinite;
+      position: absolute;
+      width: 55px;
+      height: 55px;
+      opacity: 0.8;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
+      image-rendering: pixelated;
+      image-rendering: auto;
+      -ms-interpolation-mode: nearest-neighbor;
+    }
+    
+    .leaf-float {
+      animation: float-drift 5s ease-in-out infinite;
+      position: absolute;
+      width: 55px;
+      height: 55px;
+      opacity: 0.7;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
+      image-rendering: pixelated;
+      image-rendering: auto;
+      -ms-interpolation-mode: nearest-neighbor;
+    }
+    
+    /* Cloud Animations */
+    @keyframes cloud-drift {
+      0% { transform: translateX(-10px) translateY(0); }
+      50% { transform: translateX(10px) translateY(-8px); }
+      100% { transform: translateX(-10px) translateY(0); }
+    }
+    
+    @keyframes cloud-float {
+      0% { transform: translateX(0) translateY(0); }
+      33% { transform: translateX(8px) translateY(-5px); }
+      66% { transform: translateX(-5px) translateY(5px); }
+      100% { transform: translateX(0) translateY(0); }
+    }
+    
+    /* Cloud Classes */
+    .cloud-top {
+      animation: cloud-drift 20s ease-in-out infinite;
+      position: absolute;
+      width: 150px;
+      height: 50px;
+      opacity: 0.6;
+      z-index: 10;
+      filter: drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.15));
+    }
+    
+    .cloud-bottom {
+      animation: cloud-float 15s ease-in-out infinite;
+      position: absolute;
+      width: 150px;
+      height: 50px;
+      opacity: 0.5;
+      z-index: 15;
+      filter: drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.15));
+    }
+    
+    /* Custom Form Validation */
+    .error-message {
+      color: #dc2626;
+      font-size: 0.875rem;
+      margin-top: 0.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .input-error {
+      border-color: #dc2626 !important;
+      box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1) !important;
+    }
+    
+    .input-success {
+      border-color: #16a34a !important;
+      box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1) !important;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 overflow-x-hidden">
+  <div class="main-container">
+    <!-- Left Section -->
+    <div class="left-section bg-transparent flex items-center justify-center relative p-0">
+      <img src="harvesthubleft2.png" alt="Farm" class="w-full h-full object-cover" />
+      
+      <!-- Animated Leaves -->
+      <img src="leaf2.png" alt="Leaf" class="leaf-sway" style="top: 15%; right: 8%; animation-delay: -1s; transform: rotate(25deg);" />
+      <img src="leaf1.png" alt="Leaf" class="leaf-float" style="bottom: 8%; left: 12%; animation-delay: -3s; transform: rotate(-15deg); width: 120px; height: 120px;" />
+      
+      <!-- Animated Clouds -->
+      <img src="cloud1.png" alt="Cloud" class="cloud-top" style="top: 25%; left: 18%; animation-delay: -2s; width: 280px; height: 120px;" />
+      <img src="cloud2.png" alt="Cloud" class="cloud-top" style="top: 25%; left: 18%; animation-delay: -2s; width: 280px; height: 120px;" />
+      
+      <div class="absolute inset-0 flex items-center justify-center">
+        <div class="text-center px-4">
+          <p class="text-2xl text-gray-700 font-normal leading-tight mb-0">Direct from the</p>
+          <p class="text-6xl font-bold custom-green leading-none -mt-1 mb-0">Farm,</p>
+          <p class="text-2xl text-gray-700 font-normal leading-tight -mt-2">Straight to <span class="font-bold custom-green">You.</span></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Section -->
+    <div class="right-section bg-gray-100 flex items-center justify-center py-4">
+      <div class="w-full max-w-md p-6 shadow-lg rounded-lg bg-white">
+        <div class="flex items-center space-x-2 mb-3">
+          <img src="harvesthub.png" alt="harvesthub" class="w-8 h-8">
+          <h1 class="text-xl font-semibold text-green-700">Harvest Hub</h1>
+        </div>
+
+        <h2 class="text-2xl font-bold mb-1">Create an account</h2>
+        <p class="text-gray-600 mb-4">Bridging Farmers to Buyers Digitally</p>
+
+        <form id="createAccountForm" action="/register" method="POST" class="space-y-3" novalidate>
+          <div>
+            <label for="fullName" class="block text-sm font-medium text-gray-700">Full Name</label>
+            <input type="text" name="fullName" id="fullName" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-600" required>
+            <div id="fullName-error" class="error-message" style="display: none;">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+              </svg>
+              <span id="fullName-error-text">Please enter your full name</span>
+            </div>
+          </div>
+
+          <div>
+            <label for="email" class="block text-sm font-medium text-gray-700">Your email</label>
+            <input type="email" name="email" id="email" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-600" required>
+            <div id="email-error" class="error-message" style="display: none;">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+              </svg>
+              <span id="email-error-text">Please enter a valid email address</span>
+            </div>
+          </div>
+
+          <div>
+            <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+            <div class="relative">
+              <input type="password" name="password" id="password" class="w-full border border-gray-300 rounded-md px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-green-600" required>
+              <button type="button" onclick="togglePassword('password')" class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                <svg id="password-eye" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+              </button>
+            </div>
+            <div id="password-error" class="error-message" style="display: none;">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+              </svg>
+              <span id="password-error-text">Password must be at least 6 characters</span>
+            </div>
+          </div>
+
+          <div>
+            <label for="confirm-password" class="block text-sm font-medium text-gray-700">Confirm password</label>
+            <div class="relative">
+              <input type="password" name="confirm-password" id="confirm-password" class="w-full border border-gray-300 rounded-md px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-green-600" required>
+              <button type="button" onclick="togglePassword('confirm-password')" class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                <svg id="confirm-password-eye" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+              </button>
+            </div>
+            <div id="confirm-password-error" class="error-message" style="display: none;">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+              </svg>
+              <span id="confirm-password-error-text">Passwords do not match</span>
+            </div>
+          </div>
+
+          <div class="flex items-start">
+            <input type="checkbox" id="terms" name="terms" class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded mt-1 mr-2" required>
+            <label for="terms" class="text-sm text-gray-700 leading-relaxed">
+              I accept the <a href="terms.html" target="_blank" class="text-green-700 hover:underline">Terms and Conditions</a> and <a href="privacy-policy.html" target="_blank" class="text-green-700 hover:underline">Privacy Policy</a>
+            </label>
+          </div>
+          <div id="terms-error" class="error-message" style="display: none;">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+            </svg>
+            <span id="terms-error-text">Please accept the Terms and Conditions and Privacy Policy</span>
+          </div>
+
+          <button type="submit" class="w-full bg-green-700 text-white font-semibold py-2 rounded-md hover:bg-green-800 transition">Create an account</button>
+        </form>
+
+        <p class="text-sm text-gray-600 mt-3 text-center">Already have an account? <a href="../login/login.html" class="text-green-700 font-semibold hover:underline">Login here</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- API Client -->
+  <script src="../js/api.js"></script>
+  <script>
+    // Form Validation
+    const api = new HarvestHubAPI();
+    
+    document.getElementById('createAccountForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const fullName = document.getElementById('fullName');
+      const email = document.getElementById('email');
+      const password = document.getElementById('password');
+      const confirmPassword = document.getElementById('confirm-password');
+      const terms = document.getElementById('terms');
+      const submitBtn = document.querySelector('button[type="submit"]');
+      let isValid = true;
+      
+      // Reset previous validation states
+      clearValidation(fullName);
+      clearValidation(email);
+      clearValidation(password);
+      clearValidation(confirmPassword);
+      
+      // Validate full name
+      if (!fullName.value.trim()) {
+        showError(fullName, 'fullName-error', 'Please enter your full name');
+        isValid = false;
+      } else if (fullName.value.trim().length < 2) {
+        showError(fullName, 'fullName-error', 'Full name must be at least 2 characters');
+        isValid = false;
+      } else {
+        showSuccess(fullName);
+      }
+      
+      // Validate email
+      if (!email.value.trim()) {
+        showError(email, 'email-error', 'Please enter your email address');
+        isValid = false;
+      } else if (!isValidEmail(email.value)) {
+        showError(email, 'email-error', 'Please enter a valid email address');
+        isValid = false;
+      } else {
+        showSuccess(email);
+      }
+      
+      // Validate password
+      if (!password.value.trim()) {
+        showError(password, 'password-error', 'Please enter a password');
+        isValid = false;
+      } else if (password.value.length < 6) {
+        showError(password, 'password-error', 'Password must be at least 6 characters');
+        isValid = false;
+      } else {
+        showSuccess(password);
+      }
+      
+      // Validate confirm password
+      if (!confirmPassword.value.trim()) {
+        showError(confirmPassword, 'confirm-password-error', 'Please confirm your password');
+        isValid = false;
+      } else if (password.value !== confirmPassword.value) {
+        showError(confirmPassword, 'confirm-password-error', 'Passwords do not match');
+        isValid = false;
+      } else {
+        showSuccess(confirmPassword);
+      }
+      
+      // Validate terms checkbox
+      if (!terms.checked) {
+        document.getElementById('terms-error').style.display = 'flex';
+        isValid = false;
+      } else {
+        document.getElementById('terms-error').style.display = 'none';
+      }
+      
+      // If valid, submit to API
+      if (isValid) {
+        try {
+          // Disable submit button and show loading state
+          submitBtn.disabled = true;
+          submitBtn.innerHTML = 'Creating Account...';
+          
+          const userData = {
+            fullName: fullName.value.trim(),
+            email: email.value.trim(),
+            password: password.value
+          };
+          
+          const response = await api.register(userData);
+          
+          if (response.success) {
+            alert('Account created successfully! You are now logged in.');
+            // Redirect to main dashboard
+            window.location.href = '../main.html';
+          }
+        } catch (error) {
+          console.error('Registration error:', error);
+          
+          // Handle specific error cases
+          if (error.message.includes('already exists')) {
+            showError(email, 'email-error', 'An account with this email already exists');
+          } else {
+            alert('Failed to create account: ' + error.message);
+          }
+        } finally {
+          // Re-enable submit button
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = 'Create an account';
+        }
+      }
+    });
+    
+    function showError(input, errorId, message) {
+      input.classList.add('input-error');
+      input.classList.remove('input-success');
+      const errorDiv = document.getElementById(errorId);
+      const errorText = document.getElementById(errorId + '-text');
+      errorText.textContent = message;
+      errorDiv.style.display = 'flex';
+    }
+    
+    function showSuccess(input) {
+      input.classList.add('input-success');
+      input.classList.remove('input-error');
+    }
+    
+    function clearValidation(input) {
+      input.classList.remove('input-error', 'input-success');
+      const fieldName = input.id;
+      const errorDiv = document.getElementById(fieldName + '-error');
+      if (errorDiv) {
+        errorDiv.style.display = 'none';
+      }
+    }
+    
+    function isValidEmail(email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    }
+    
+    // Real-time validation
+    document.getElementById('fullName').addEventListener('blur', function() {
+      if (this.value.trim() && this.value.trim().length < 2) {
+        showError(this, 'fullName-error', 'Full name must be at least 2 characters');
+      } else if (this.value.trim()) {
+        showSuccess(this);
+        document.getElementById('fullName-error').style.display = 'none';
+      }
+    });
+    
+    document.getElementById('email').addEventListener('blur', function() {
+      if (this.value.trim() && !isValidEmail(this.value)) {
+        showError(this, 'email-error', 'Please enter a valid email address');
+      } else if (this.value.trim()) {
+        showSuccess(this);
+        document.getElementById('email-error').style.display = 'none';
+      }
+    });
+    
+    document.getElementById('password').addEventListener('blur', function() {
+      if (this.value.trim() && this.value.length < 6) {
+        showError(this, 'password-error', 'Password must be at least 6 characters');
+      } else if (this.value.trim()) {
+        showSuccess(this);
+        document.getElementById('password-error').style.display = 'none';
+      }
+    });
+    
+    document.getElementById('confirm-password').addEventListener('blur', function() {
+      const password = document.getElementById('password').value;
+      if (this.value.trim() && this.value !== password) {
+        showError(this, 'confirm-password-error', 'Passwords do not match');
+      } else if (this.value.trim() && this.value === password) {
+        showSuccess(this);
+        document.getElementById('confirm-password-error').style.display = 'none';
+      }
+    });
+    
+    document.getElementById('terms').addEventListener('change', function() {
+      if (this.checked) {
+        document.getElementById('terms-error').style.display = 'none';
+      }
+    });
+
+    function togglePassword(fieldId) {
+      const field = document.getElementById(fieldId);
+      const eyeIcon = document.getElementById(fieldId + '-eye');
+      
+      if (field.type === 'password') {
+        field.type = 'text';
+        eyeIcon.innerHTML = `
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21" />
+        `;
+      } else {
+        field.type = 'password';
+        eyeIcon.innerHTML = `
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+        `;
+      }
+    }
+  </script>
+</body>
+</html>

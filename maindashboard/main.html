@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full overflow-hidden">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard - Harvest Hub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    html, body { 
+      height: 100vh; 
+      margin: 0; 
+      padding: 0; 
+      overflow: hidden;
+      background-color: #f0fdf4;
+      position: relative;
+    }
+    .custom-green { color: #285508; }
+    .bg-custom-green { background-color: #285508; }
+    
+    /* Card hover effects */
+    .dashboard-card {
+      transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    }
+    
+    .dashboard-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 30px rgba(40, 85, 8, 0.1);
+    }
+    
+    /* Fresh green gradient backgrounds */
+    .gradient-green {
+      background: linear-gradient(135deg, #285508 0%, #22c55e 100%);
+    }
+    
+    .gradient-green-light {
+      background: linear-gradient(135deg, #16a34a 0%, #4ade80 100%);
+    }
+    
+    .gradient-green-soft {
+      background: linear-gradient(135deg, #059669 0%, #34d399 100%);
+    }
+    
+    .gradient-green-mint {
+      background: linear-gradient(135deg, #065f46 0%, #6ee7b7 100%);
+    }
+    
+    /* Soft background colors */
+    .bg-soft-green { background-color: #f0fdf4; }
+    .bg-mint-fresh { background-color: #ecfdf5; }
+    .text-fresh-green { color: #166534; }
+    .text-soft-green { color: #15803d; }
+  </style>
+</head>
+<body class="bg-soft-green h-screen flex flex-col overflow-hidden">
+  <!-- Header Navigation -->
+  <header class="flex-shrink-0 bg-white shadow-md border-b-2 border-green-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-14">
+        <!-- Logo and Brand -->
+        <div class="flex items-center space-x-3 flex-shrink-0 min-w-0">
+          <img src="harvesthub.png" alt="Harvest Hub Logo" class="w-9 h-9 object-contain">
+          <div>
+            <h1 class="text-xl font-bold custom-green">Harvest Hub</h1>
+          </div>
+        </div>
+
+        <!-- Navigation Links -->
+        <nav class="hidden xl:flex space-x-8 flex-1 justify-center">
+          <a href="#" class="text-green-700 hover:text-green-800 px-3 py-2 text-sm font-medium border-b-2 border-green-500 whitespace-nowrap transition-colors">Home</a>
+          <a href="#" class="text-gray-600 hover:text-green-700 px-3 py-2 text-sm font-medium whitespace-nowrap transition-colors">Products</a>
+          <a href="#" class="text-gray-600 hover:text-green-700 px-3 py-2 text-sm font-medium whitespace-nowrap transition-colors">Orders</a>
+          <a href="#" class="text-gray-600 hover:text-green-700 px-3 py-2 text-sm font-medium whitespace-nowrap transition-colors">Top Farmers</a>
+          <a href="#" class="text-gray-600 hover:text-green-700 px-3 py-2 text-sm font-medium whitespace-nowrap transition-colors">About Us</a>
+          <a href="#" class="text-gray-600 hover:text-green-700 px-3 py-2 text-sm font-medium whitespace-nowrap transition-colors">Help</a>
+        </nav>
+
+        <!-- Right side - Search, Notifications, Profile -->
+        <div class="flex items-center space-x-3 flex-shrink-0 min-w-0">
+          <!-- Search -->
+          <div class="relative hidden lg:block">
+            <input type="text" placeholder="Search..." class="bg-green-50 text-gray-700 placeholder-gray-500 pl-3 pr-9 py-2 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 border border-green-200 w-52">
+            <svg class="absolute right-3 top-2.5 w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+          </div>
+
+          <!-- Shopping Cart -->
+          <button class="relative p-2 text-green-600 hover:text-green-700 hover:bg-green-50 rounded-lg transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+            </svg>
+            <span class="absolute -top-1 -right-1 bg-green-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center font-medium">3</span>
+          </button>
+
+          <!-- Notifications -->
+          <button class="relative p-2 text-green-600 hover:text-green-700 hover:bg-green-50 rounded-lg transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
+            </svg>
+            <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center font-medium">2</span>
+          </button>
+
+          <!-- Profile Dropdown -->
+          <div class="relative group">
+            <button class="flex items-center space-x-2 text-gray-700 hover:text-green-700 hover:bg-green-50 px-3 py-2 rounded-lg transition-all duration-200 border border-transparent hover:border-green-200">
+              <div class="relative">
+                <div class="w-8 h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center text-white font-semibold text-sm shadow-md">
+                  JD
+                </div>
+                <div class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-400 border border-white rounded-full"></div>
+              </div>
+              <div class="text-left hidden lg:block">
+                <span class="text-sm font-medium block">John Doe</span>
+                <span class="text-xs text-green-600">Admin</span>
+              </div>
+              <svg class="w-4 h-4 text-gray-400 group-hover:text-green-600 transition-colors hidden lg:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </button>
+            
+            <!-- Dropdown Menu -->
+            <div class="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-green-100 py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+              <div class="px-4 py-3 border-b border-green-50">
+                <p class="text-sm font-medium text-gray-900">John Doe</p>
+                <p class="text-xs text-green-600">john.doe@harvesthub.com</p>
+              </div>
+              <a href="profile.html" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-700 transition-colors">
+                <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                </svg>
+                Profile Settings
+              </a>
+              <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-700 transition-colors">
+                <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+                Account Settings
+              </a>
+              <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-700 transition-colors">
+                <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                Help & Support
+              </a>
+              <div class="border-t border-green-50 mt-2 pt-2">
+                <a href="../login/login.html" class="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">
+                  <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                  </svg>
+                  Sign Out
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 overflow-y-auto bg-mint-fresh min-h-0">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 h-full">
+    <!-- Hero Banner -->
+    <div class="mb-4">
+      <div class="gradient-green-light rounded-xl p-6 text-white relative overflow-hidden">
+        <div class="relative z-10">
+          <h2 class="text-2xl font-bold mb-2">Fresh Farm-to-Table Marketplace 🌱</h2>
+          <p class="text-green-50 mb-4">Discover premium organic produce directly from local farmers</p>
+          <button class="bg-white text-green-600 px-6 py-2 rounded-lg font-medium hover:bg-green-50 transition-colors">
+            Shop Now
+          </button>
+        </div>
+        <div class="absolute top-0 right-0 w-32 h-32 opacity-20">
+          <svg viewBox="0 0 100 100" fill="currentColor">
+            <circle cx="50" cy="50" r="40"/>
+            <circle cx="20" cy="30" r="15"/>
+            <circle cx="80" cy="20" r="10"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+      <div class="bg-white p-4 rounded-lg shadow-sm border border-green-100 text-center">
+        <div class="text-2xl font-bold text-green-600">150+</div>
+        <div class="text-sm text-gray-600">Fresh Products</div>
+      </div>
+      <div class="bg-white p-4 rounded-lg shadow-sm border border-green-100 text-center">
+        <div class="text-2xl font-bold text-green-600">50+</div>
+        <div class="text-sm text-gray-600">Local Farmers</div>
+      </div>
+      <div class="bg-white p-4 rounded-lg shadow-sm border border-green-100 text-center">
+        <div class="text-2xl font-bold text-green-600">98%</div>
+        <div class="text-sm text-gray-600">Fresh Guarantee</div>
+      </div>
+      <div class="bg-white p-4 rounded-lg shadow-sm border border-green-100 text-center">
+        <div class="text-2xl font-bold text-green-600">24hr</div>
+        <div class="text-sm text-gray-600">Delivery</div>
+      </div>
+    </div>
+
+    <!-- Featured Farmers Section -->
+    <div class="mb-6">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-xl font-bold text-fresh-green">Featured Farmers</h3>
+        <a href="#" class="text-green-600 hover:text-green-700 text-sm font-medium">View All</a>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Farmer Card 1 -->
+        <div class="dashboard-card bg-white rounded-lg shadow-sm border border-green-100 p-4">
+          <div class="flex items-center space-x-3 mb-3">
+            <div class="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
+              GV
+            </div>
+            <div>
+              <h4 class="font-semibold text-fresh-green">Green Valley Farm</h4>
+              <p class="text-sm text-green-600">Organic Vegetables</p>
+            </div>
+          </div>
+          <p class="text-sm text-gray-600 mb-3">Specializes in fresh organic vegetables and seasonal produce. 20+ years of sustainable farming.</p>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-1">
+              <span class="text-yellow-400">★★★★★</span>
+              <span class="text-sm text-gray-600">(4.9)</span>
+            </div>
+            <button class="bg-green-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-green-700 transition-colors">
+              View Products
+            </button>
+          </div>
+        </div>
+
+        <!-- Farmer Card 2 -->
+        <div class="dashboard-card bg-white rounded-lg shadow-sm border border-green-100 p-4">
+          <div class="flex items-center space-x-3 mb-3">
+            <div class="w-12 h-12 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
+              SO
+            </div>
+            <div>
+              <h4 class="font-semibold text-fresh-green">Sunrise Orchard</h4>
+              <p class="text-sm text-green-600">Fresh Fruits</p>
+            </div>
+          </div>
+          <p class="text-sm text-gray-600 mb-3">Premium quality fruits including apples, berries, and seasonal citrus fruits from family-owned orchard.</p>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-1">
+              <span class="text-yellow-400">★★★★★</span>
+              <span class="text-sm text-gray-600">(4.8)</span>
+            </div>
+            <button class="bg-green-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-green-700 transition-colors">
+              View Products
+            </button>
+          </div>
+        </div>
+
+        <!-- Farmer Card 3 -->
+        <div class="dashboard-card bg-white rounded-lg shadow-sm border border-green-100 p-4">
+          <div class="flex items-center space-x-3 mb-3">
+            <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
+              MD
+            </div>
+            <div>
+              <h4 class="font-semibold text-fresh-green">Mountain Dairy</h4>
+              <p class="text-sm text-green-600">Dairy Products</p>
+            </div>
+          </div>
+          <p class="text-sm text-gray-600 mb-3">Fresh milk, cheese, yogurt and butter from grass-fed cows in the mountain region.</p>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-1">
+              <span class="text-yellow-400">★★★★★</span>
+              <span class="text-sm text-gray-600">(4.7)</span>
+            </div>
+            <button class="bg-green-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-green-700 transition-colors">
+              View Products
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Top Selling Products -->
+    <div class="mb-6">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-xl font-bold text-fresh-green">Top Selling Products</h3>
+        <a href="#" class="text-green-600 hover:text-green-700 text-sm font-medium">View All</a>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        <!-- Product Card 1 -->
+        <a href="product-detail.html" class="dashboard-card bg-white rounded-lg shadow-sm border border-green-100 p-3 block hover:shadow-md transition-all">
+          <div class="bg-green-50 rounded-lg p-3 mb-3 flex items-center justify-center h-24">
+            <svg class="w-12 h-12 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+            </svg>
+          </div>
+          <h4 class="font-semibold text-fresh-green text-sm mb-1">Organic Tomatoes</h4>
+          <p class="text-xs text-gray-600 mb-2">Green Valley Farm</p>
+          <div class="flex items-center justify-between">
+            <span class="text-green-600 font-bold text-sm">$4.99/lb</span>
+            <button onclick="event.preventDefault(); addToCart('tomatoes')" class="bg-green-100 text-green-600 p-1 rounded-lg hover:bg-green-200 transition-colors">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+              </svg>
+            </button>
+          </div>
+        </a>
+
+        <!-- Product Card 2 -->
+        <a href="product-detail.html" class="dashboard-card bg-white rounded-lg shadow-sm border border-green-100 p-3 block hover:shadow-md transition-all">
+          <div class="bg-orange-50 rounded-lg p-3 mb-3 flex items-center justify-center h-24">
+            <svg class="w-12 h-12 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/>
+            </svg>
+          </div>
+          <h4 class="font-semibold text-fresh-green text-sm mb-1">Fresh Apples</h4>
+          <p class="text-xs text-gray-600 mb-2">Sunrise Orchard</p>
+          <div class="flex items-center justify-between">
+            <span class="text-green-600 font-bold text-sm">$3.49/lb</span>
+            <button onclick="event.preventDefault(); addToCart('apples')" class="bg-green-100 text-green-600 p-1 rounded-lg hover:bg-green-200 transition-colors">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+              </svg>
+            </button>
+          </div>
+        </a>
+
+        <!-- Product Card 3 -->
+        <a href="product-detail.html" class="dashboard-card bg-white rounded-lg shadow-sm border border-green-100 p-3 block hover:shadow-md transition-all">
+          <div class="bg-blue-50 rounded-lg p-3 mb-3 flex items-center justify-center h-24">
+            <svg class="w-12 h-12 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+            </svg>
+          </div>
+          <h4 class="font-semibold text-fresh-green text-sm mb-1">Farm Fresh Milk</h4>
+          <p class="text-xs text-gray-600 mb-2">Mountain Dairy</p>
+          <div class="flex items-center justify-between">
+            <span class="text-green-600 font-bold text-sm">$5.99/gal</span>
+            <button onclick="event.preventDefault(); addToCart('milk')" class="bg-green-100 text-green-600 p-1 rounded-lg hover:bg-green-200 transition-colors">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+              </svg>
+            </button>
+          </div>
+        </a>
+
+        <!-- Product Card 4 -->
+        <a href="product-detail.html" class="dashboard-card bg-white rounded-lg shadow-sm border border-green-100 p-3 block hover:shadow-md transition-all">
+          <div class="bg-purple-50 rounded-lg p-3 mb-3 flex items-center justify-center h-24">
+            <svg class="w-12 h-12 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
+            </svg>
+          </div>
+          <h4 class="font-semibold text-fresh-green text-sm mb-1">Organic Carrots</h4>
+          <p class="text-xs text-gray-600 mb-2">Green Valley Farm</p>
+          <div class="flex items-center justify-between">
+            <span class="text-green-600 font-bold text-sm">$2.99/lb</span>
+            <button onclick="event.preventDefault(); addToCart('carrots')" class="bg-green-100 text-green-600 p-1 rounded-lg hover:bg-green-200 transition-colors">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+              </svg>
+            </button>
+          </div>
+        </a>
+
+        <!-- Product Card 5 -->
+        <a href="product-detail.html" class="dashboard-card bg-white rounded-lg shadow-sm border border-green-100 p-3 block hover:shadow-md transition-all">
+          <div class="bg-red-50 rounded-lg p-3 mb-3 flex items-center justify-center h-24">
+            <svg class="w-12 h-12 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+            </svg>
+          </div>
+          <h4 class="font-semibold text-fresh-green text-sm mb-1">Fresh Strawberries</h4>
+          <p class="text-xs text-gray-600 mb-2">Sunrise Orchard</p>
+          <div class="flex items-center justify-between">
+            <span class="text-green-600 font-bold text-sm">$6.99/lb</span>
+            <button onclick="event.preventDefault(); addToCart('strawberries')" class="bg-green-100 text-green-600 p-1 rounded-lg hover:bg-green-200 transition-colors">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+              </svg>
+            </button>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Today's Deals & Quick Actions -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <!-- Today's Special Deals -->
+      <div class="lg:col-span-2">
+        <div class="bg-white rounded-lg shadow-sm border border-green-100 p-4">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-semibold text-fresh-green">Today's Special Deals</h3>
+            <span class="bg-red-100 text-red-600 px-2 py-1 rounded-lg text-xs font-medium">Limited Time</span>
+          </div>
+          
+          <div class="space-y-3">
+            <!-- Deal Item 1 -->
+            <div class="flex items-center justify-between p-3 bg-gradient-to-r from-green-50 to-green-100 rounded-lg border border-green-200">
+              <div class="flex items-center space-x-3">
+                <div class="bg-green-200 p-2 rounded-lg">
+                  <svg class="w-6 h-6 text-green-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                  </svg>
+                </div>
+                <div>
+                  <p class="font-semibold text-fresh-green">Organic Vegetable Bundle</p>
+                  <p class="text-sm text-green-600">Fresh tomatoes, carrots, lettuce & more</p>
+                </div>
+              </div>
+              <div class="text-right">
+                <p class="text-lg font-bold text-fresh-green">$19.99</p>
+                <p class="text-sm text-gray-500 line-through">$29.99</p>
+                <button class="bg-green-600 text-white px-4 py-1 rounded-lg text-sm hover:bg-green-700 transition-colors mt-1">
+                  Add to Cart
+                </button>
+              </div>
+            </div>
+
+            <!-- Deal Item 2 -->
+            <div class="flex items-center justify-between p-3 bg-gradient-to-r from-orange-50 to-orange-100 rounded-lg border border-orange-200">
+              <div class="flex items-center space-x-3">
+                <div class="bg-orange-200 p-2 rounded-lg">
+                  <svg class="w-6 h-6 text-orange-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/>
+                  </svg>
+                </div>
+                <div>
+                  <p class="font-semibold text-fresh-green">Premium Fruit Mix</p>
+                  <p class="text-sm text-green-600">Apples, oranges, berries & seasonal fruits</p>
+                </div>
+              </div>
+              <div class="text-right">
+                <p class="text-lg font-bold text-fresh-green">$24.99</p>
+                <p class="text-sm text-gray-500 line-through">$34.99</p>
+                <button class="bg-green-600 text-white px-4 py-1 rounded-lg text-sm hover:bg-green-700 transition-colors mt-1">
+                  Add to Cart
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions & Top Sellers -->
+      <div class="space-y-4">
+        <!-- Quick Actions -->
+        <div class="bg-white rounded-lg shadow-sm border border-green-100 p-4">
+          <h3 class="text-lg font-semibold text-fresh-green mb-3">Quick Actions</h3>
+          <div class="space-y-2">
+            <button class="w-full bg-green-600 hover:bg-green-700 text-white p-3 rounded-lg text-left flex items-center space-x-2 transition-colors">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+              </svg>
+              <span class="text-sm">Browse All Products</span>
+            </button>
+            
+            <button class="w-full bg-green-500 hover:bg-green-600 text-white p-3 rounded-lg text-left flex items-center space-x-2 transition-colors">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+              </svg>
+              <span class="text-sm">Find Farmers</span>
+            </button>
+            
+            <button class="w-full bg-green-400 hover:bg-green-500 text-white p-3 rounded-lg text-left flex items-center space-x-2 transition-colors">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
+              </svg>
+              <span class="text-sm">View My Orders</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Top Sellers Badge -->
+        <div class="bg-gradient-to-br from-yellow-400 to-orange-500 rounded-lg p-4 text-white text-center">
+          <div class="text-2xl mb-2">🏆</div>
+          <h4 class="font-bold text-lg mb-1">Top Seller</h4>
+          <p class="text-sm opacity-90 mb-2">Green Valley Farm</p>
+          <div class="bg-white bg-opacity-20 rounded-lg p-2">
+            <p class="text-xs font-medium">1,200+ Products Sold</p>
+            <p class="text-xs">This Month</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="flex-shrink-0 bg-white border-t border-green-200 py-3">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between">
+        <p class="text-sm text-green-600">© 2025 Harvest Hub. All rights reserved.</p>
+        <div class="flex space-x-6">
+          <a href="../createaccount/privacy-policy.html" class="text-sm text-green-600 hover:text-green-700 transition-colors">Privacy Policy</a>
+          <a href="../createaccount/terms.html" class="text-sm text-green-600 hover:text-green-700 transition-colors">Terms of Service</a>
+          <a href="profile.html" class="text-sm text-green-600 hover:text-green-700 transition-colors">Profile Settings</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function addToCart(product) {
+      // Simple add to cart functionality
+      alert(`Added ${product} to cart!`);
+      
+      // Update cart count
+      const cartBadge = document.querySelector('.bg-green-500');
+      if (cartBadge) {
+        let currentCount = parseInt(cartBadge.textContent);
+        cartBadge.textContent = currentCount + 1;
+      }
+    }
+  </script>
+</body>
+</html>

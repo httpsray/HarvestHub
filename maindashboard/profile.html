@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Account - Harvest Hub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .custom-green { color: #285508; }
+    .bg-custom-green { background-color: #285508; }
+    
+    /* Prevent scrollbars */
+    html, body {
+      overflow-x: hidden;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+    
+    /* Dashboard Layout */
+    .dashboard-container {
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+    
+    /* Sidebar Styles */
+    .sidebar {
+      width: 280px;
+      background: linear-gradient(135deg, #15803d 0%, #166534 100%);
+      transition: width 0.3s ease;
+      overflow-y: auto;
+      flex-shrink: 0;
+    }
+    
+    .sidebar.collapsed {
+      width: 80px;
+    }
+    
+    .sidebar-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 20px;
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      border-left: 4px solid transparent;
+    }
+    
+    .sidebar-item:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: white;
+      border-left-color: #22c55e;
+    }
+    
+    .sidebar-item.active {
+      background-color: rgba(255, 255, 255, 0.15);
+      color: white;
+      border-left-color: #22c55e;
+    }
+    
+    .sidebar-icon {
+      width: 24px;
+      height: 24px;
+      margin-right: 12px;
+      flex-shrink: 0;
+    }
+    
+    .sidebar-text {
+      font-size: 14px;
+      font-weight: 500;
+      transition: opacity 0.3s ease;
+    }
+    
+    .sidebar.collapsed .sidebar-text {
+      opacity: 0;
+      display: none;
+    }
+    
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      background-color: #f8fafc;
+      overflow-y: auto;
+      padding: 24px;
+    }
+    
+    /* Stats Cards */
+    .stats-card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      border: 1px solid #e2e8f0;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    
+    .stats-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 100%;
+        position: fixed;
+        z-index: 1000;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+      }
+      
+      .sidebar.mobile-open {
+        transform: translateX(0);
+      }
+      
+      .main-content {
+        padding: 16px;
+      }
+      
+      .mobile-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+        display: none;
+      }
+      
+      .mobile-overlay.active {
+        display: block;
+      }
+    }
+    
+    /* Notification Badge */
+    .notification-badge {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background-color: #ef4444;
+      color: white;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+    }
+    
+    /* Content Sections */
+    .content-section {
+      display: none;
+    }
+    
+    .content-section.active {
+      display: block;
+    }
+    
+    /* Table Styles */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .data-table th {
+      background-color: #f8fafc;
+      padding: 12px;
+      text-align: left;
+      font-weight: 600;
+      color: #374151;
+      border-bottom: 2px solid #e5e7eb;
+    }
+    
+    .data-table td {
+      padding: 12px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    
+    .data-table tr:hover {
+      background-color: #f9fafb;
+    }
+    
+    /* Status Badges */
+    .status-badge {
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    
+    .status-active { background-color: #dcfce7; color: #166534; }
+    .status-pending { background-color: #fef3c7; color: #d97706; }
+    .status-completed { background-color: #dbeafe; color: #1d4ed8; }
+    .status-cancelled { background-color: #fecaca; color: #dc2626; }
+  </style>
+</head>
+<body class="bg-gray-50">
+  <!-- Mobile Overlay -->
+  <div class="mobile-overlay" id="mobileOverlay"></div>
+  
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+      <!-- Logo Header -->
+      <div class="p-6 border-b border-green-600">
+        <div class="flex items-center">
+          <img src="../harvesthub.png" alt="Harvest Hub" class="w-8 h-8 mr-3">
+          <div class="sidebar-text">
+            <h1 class="text-white text-lg font-bold">Harvest Hub</h1>
+            <p class="text-green-100 text-sm">My Account</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Navigation Items -->
+      <nav class="mt-6">
+        <a href="#" class="sidebar-item active" data-section="dashboard">
+          <svg class="sidebar-icon" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+          </svg>
+          <span class="sidebar-text">Overview</span>
+        </a>
+        
+        <a href="#" class="sidebar-item" data-section="profile">
+          <svg class="sidebar-icon" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+          </svg>
+          <span class="sidebar-text">Account Settings</span>
+        </a>
+        
+        <a href="#" class="sidebar-item" data-section="orders">
+          <svg class="sidebar-icon" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M7 4V2a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v2H2a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h1v10a3 3 0 0 0 3 3h12a3 3 0 0 0 3-3V10h1a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1h-1V2a1 1 0 0 0-1-1h-2a1 1 0 0 0-1 1v2H7zm2 0h6V3h2v3H9V3h2v1zM2 6h20v2H2V6zm3 4h14v10a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V10z"/>
+          </svg>
+          <span class="sidebar-text">My Orders</span>
+        </a>
+        
+        <a href="#" class="sidebar-item" data-section="favorites">
+          <svg class="sidebar-icon" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+          <span class="sidebar-text">Favorites</span>
+        </a>
+        
+        <a href="#" class="sidebar-item" data-section="addresses">
+          <svg class="sidebar-icon" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+          </svg>
+          <span class="sidebar-text">Addresses</span>
+        </a>
+        
+        <a href="#" class="sidebar-item" data-section="payments">
+          <svg class="sidebar-icon" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/>
+          </svg>
+          <span class="sidebar-text">Payment Methods</span>
+        </a>
+        
+        <a href="#" class="sidebar-item" data-section="notifications">
+          <div class="relative">
+            <svg class="sidebar-icon" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
+            </svg>
+            <span class="notification-badge">2</span>
+          </div>
+          <span class="sidebar-text">Notifications</span>
+        </a>
+        
+        <a href="#" class="sidebar-item" data-section="help">
+          <svg class="sidebar-icon" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/>
+          </svg>
+          <span class="sidebar-text">Help & Support</span>
+        </a>
+      </nav>
+      
+      <!-- Bottom Section -->
+      <div class="mt-auto p-6 border-t border-green-600">
+        <a href="../login/login.html" class="sidebar-item text-red-200 hover:text-red-100">
+          <svg class="sidebar-icon" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+          </svg>
+          <span class="sidebar-text">Logout</span>
+        </a>
+      </div>
+    </div>
+    
+    <!-- Main Content Area -->
+    <div class="main-content">
+      <!-- Top Header -->
+      <div class="flex items-center justify-between mb-8">
+        <div class="flex items-center">
+          <button class="md:hidden mr-4 p-2 rounded-lg hover:bg-gray-200" id="mobileMenuBtn">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+            </svg>
+          </button>
+          <h1 class="text-2xl font-bold text-gray-800" id="pageTitle">My Account</h1>
+        </div>
+        <div class="flex items-center space-x-4">
+          <div class="relative">
+            <button class="p-2 rounded-full hover:bg-gray-200">
+              <svg class="w-6 h-6 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+              </svg>
+            </button>
+          </div>
+          <div class="flex items-center space-x-3">
+            <img src="../harvesthub.png" alt="Profile" class="w-8 h-8 rounded-full">
+            <div class="text-sm">
+              <p class="font-semibold text-gray-800">Maria Santos</p>
+              <p class="text-gray-600">Customer</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Dashboard Content -->
+      <div id="dashboard-content" class="content-section active">
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div class="stats-card">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm text-gray-600">Total Orders</p>
+                <p class="text-2xl font-bold text-gray-800">12</p>
+              </div>
+              <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                <svg class="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M7 4V2a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v2H2a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h1v10a3 3 0 0 0 3 3h12a3 3 0 0 0 3-3V10h1a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1h-1V2a1 1 0 0 0-1-1h-2a1 1 0 0 0-1 1v2H7z"/>
+                </svg>
+              </div>
+            </div>
+            <div class="mt-2">
+              <span class="text-sm text-green-600">3 completed this month</span>
+            </div>
+          </div>
+          
+          <div class="stats-card">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm text-gray-600">Favorites</p>
+                <p class="text-2xl font-bold text-gray-800">8</p>
+              </div>
+              <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                <svg class="w-6 h-6 text-red-600" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                </svg>
+              </div>
+            </div>
+            <div class="mt-2">
+              <span class="text-sm text-red-600">2 items added this week</span>
+            </div>
+          </div>
+          
+          <div class="stats-card">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm text-gray-600">Total Spent</p>
+                <p class="text-2xl font-bold text-gray-800">₱2,340</p>
+              </div>
+              <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                <svg class="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/>
+                </svg>
+              </div>
+            </div>
+            <div class="mt-2">
+              <span class="text-sm text-blue-600">This month</span>
+            </div>
+          </div>
+          
+          <div class="stats-card">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm text-gray-600">Notifications</p>
+                <p class="text-2xl font-bold text-gray-800">2</p>
+              </div>
+              <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+                <svg class="w-6 h-6 text-purple-600" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
+                </svg>
+              </div>
+            </div>
+            <div class="mt-2">
+              <span class="text-sm text-purple-600">Unread</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Recent Activity -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Recent Orders</h3>
+            <div class="space-y-4">
+              <div class="flex items-center justify-between border-b pb-3">
+                <div>
+                  <p class="font-medium text-gray-800">Fresh Tomatoes - 2kg</p>
+                  <p class="text-sm text-gray-600">Order #ORD001</p>
+                </div>
+                <div class="text-right">
+                  <p class="font-medium text-gray-800">₱180</p>
+                  <span class="status-badge status-completed">Delivered</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-between border-b pb-3">
+                <div>
+                  <p class="font-medium text-gray-800">Organic Lettuce - 1kg</p>
+                  <p class="text-sm text-gray-600">Order #ORD002</p>
+                </div>
+                <div class="text-right">
+                  <p class="font-medium text-gray-800">₱80</p>
+                  <span class="status-badge status-pending">Processing</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="font-medium text-gray-800">Sweet Corn - 3kg</p>
+                  <p class="text-sm text-gray-600">Order #ORD003</p>
+                </div>
+                <div class="text-right">
+                  <p class="font-medium text-gray-800">₱255</p>
+                  <span class="status-badge status-active">Shipped</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Favorite Products</h3>
+            <div class="space-y-4">
+              <div class="flex items-center justify-between border-b pb-3">
+                <div class="flex items-center">
+                  <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-3">
+                    <span class="text-green-600 font-semibold">🍅</span>
+                  </div>
+                  <div>
+                    <p class="font-medium text-gray-800">Fresh Tomatoes</p>
+                    <p class="text-sm text-gray-600">Farm Fresh Co.</p>
+                  </div>
+                </div>
+                <p class="font-medium text-gray-800">₱90/kg</p>
+              </div>
+              <div class="flex items-center justify-between border-b pb-3">
+                <div class="flex items-center">
+                  <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-3">
+                    <span class="text-green-600 font-semibold">🥬</span>
+                  </div>
+                  <div>
+                    <p class="font-medium text-gray-800">Organic Lettuce</p>
+                    <p class="text-sm text-gray-600">Green Valley Farm</p>
+                  </div>
+                </div>
+                <p class="font-medium text-gray-800">₱80/kg</p>
+              </div>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                  <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-3">
+                    <span class="text-green-600 font-semibold">🌽</span>
+                  </div>
+                  <div>
+                    <p class="font-medium text-gray-800">Sweet Corn</p>
+                    <p class="text-sm text-gray-600">Sunny Acres</p>
+                  </div>
+                </div>
+                <p class="font-medium text-gray-800">₱85/kg</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Profile Content -->
+      <div id="profile-content" class="content-section">
+        <div class="bg-white rounded-lg shadow p-6">
+          <h3 class="text-lg font-semibold text-gray-800 mb-6">Account Settings</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+              <input type="text" class="w-full border border-gray-300 rounded-md px-3 py-2" value="Maria Santos">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+              <input type="email" class="w-full border border-gray-300 rounded-md px-3 py-2" value="maria@example.com">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Phone</label>
+              <input type="tel" class="w-full border border-gray-300 rounded-md px-3 py-2" value="+63 917 123 4567">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Date of Birth</label>
+              <input type="date" class="w-full border border-gray-300 rounded-md px-3 py-2" value="1990-05-15">
+            </div>
+          </div>
+          <div class="mt-6">
+            <h4 class="text-md font-semibold text-gray-800 mb-4">Change Password</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Current Password</label>
+                <input type="password" class="w-full border border-gray-300 rounded-md px-3 py-2">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">New Password</label>
+                <input type="password" class="w-full border border-gray-300 rounded-md px-3 py-2">
+              </div>
+            </div>
+          </div>
+          <div class="mt-6">
+            <button class="bg-green-700 text-white px-4 py-2 rounded-md hover:bg-green-800 mr-3">Save Changes</button>
+            <button class="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300">Cancel</button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Orders Content -->
+      <div id="orders-content" class="content-section">
+        <div class="mb-6">
+          <div class="flex space-x-4">
+            <button class="px-4 py-2 bg-green-700 text-white rounded-md">All Orders</button>
+            <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md">Processing</button>
+            <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md">Shipped</button>
+            <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md">Delivered</button>
+            <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md">Cancelled</button>
+          </div>
+        </div>
+        <div class="bg-white rounded-lg shadow overflow-hidden">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Date</th>
+                <th>Items</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>ORD001</td>
+                <td>Jan 15, 2025</td>
+                <td>Fresh Tomatoes (2kg)</td>
+                <td>₱180</td>
+                <td><span class="status-badge status-completed">Delivered</span></td>
+                <td>
+                  <button class="text-blue-600 hover:underline mr-2">View</button>
+                  <button class="text-green-600 hover:underline">Reorder</button>
+                </td>
+              </tr>
+              <tr>
+                <td>ORD002</td>
+                <td>Jan 14, 2025</td>
+                <td>Organic Lettuce (1kg)</td>
+                <td>₱80</td>
+                <td><span class="status-badge status-pending">Processing</span></td>
+                <td>
+                  <button class="text-blue-600 hover:underline mr-2">View</button>
+                  <button class="text-red-600 hover:underline">Cancel</button>
+                </td>
+              </tr>
+              <tr>
+                <td>ORD003</td>
+                <td>Jan 13, 2025</td>
+                <td>Sweet Corn (3kg)</td>
+                <td>₱255</td>
+                <td><span class="status-badge status-active">Shipped</span></td>
+                <td>
+                  <button class="text-blue-600 hover:underline mr-2">View</button>
+                  <button class="text-green-600 hover:underline">Track</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+      <!-- Favorites Content -->
+      <div id="favorites-content" class="content-section">
+        <div class="bg-white rounded-lg shadow overflow-hidden">
+          <div class="p-6 border-b">
+            <h3 class="text-lg font-semibold text-gray-800">My Favorites</h3>
+            <p class="text-sm text-gray-600 mt-1">Products you've saved for later</p>
+          </div>
+          <div class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div class="border rounded-lg p-4">
+                <div class="flex items-center justify-between mb-3">
+                  <div class="w-16 h-16 bg-green-100 rounded-lg flex items-center justify-center">
+                    <span class="text-green-600 font-semibold text-2xl">🍅</span>
+                  </div>
+                  <button class="text-red-600 hover:text-red-800">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                    </svg>
+                  </button>
+                </div>
+                <h4 class="font-medium text-gray-800">Fresh Tomatoes</h4>
+                <p class="text-sm text-gray-600">Farm Fresh Co.</p>
+                <p class="text-lg font-semibold text-green-600 mt-2">₱90/kg</p>
+                <button class="w-full bg-green-700 text-white py-2 rounded-md hover:bg-green-800 mt-3">Add to Cart</button>
+              </div>
+              <div class="border rounded-lg p-4">
+                <div class="flex items-center justify-between mb-3">
+                  <div class="w-16 h-16 bg-green-100 rounded-lg flex items-center justify-center">
+                    <span class="text-green-600 font-semibold text-2xl">🥬</span>
+                  </div>
+                  <button class="text-red-600 hover:text-red-800">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                    </svg>
+                  </button>
+                </div>
+                <h4 class="font-medium text-gray-800">Organic Lettuce</h4>
+                <p class="text-sm text-gray-600">Green Valley Farm</p>
+                <p class="text-lg font-semibold text-green-600 mt-2">₱80/kg</p>
+                <button class="w-full bg-green-700 text-white py-2 rounded-md hover:bg-green-800 mt-3">Add to Cart</button>
+              </div>
+              <div class="border rounded-lg p-4">
+                <div class="flex items-center justify-between mb-3">
+                  <div class="w-16 h-16 bg-green-100 rounded-lg flex items-center justify-center">
+                    <span class="text-green-600 font-semibold text-2xl">🌽</span>
+                  </div>
+                  <button class="text-red-600 hover:text-red-800">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                    </svg>
+                  </button>
+                </div>
+                <h4 class="font-medium text-gray-800">Sweet Corn</h4>
+                <p class="text-sm text-gray-600">Sunny Acres</p>
+                <p class="text-lg font-semibold text-green-600 mt-2">₱85/kg</p>
+                <button class="w-full bg-green-700 text-white py-2 rounded-md hover:bg-green-800 mt-3">Add to Cart</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Addresses Content -->
+      <div id="addresses-content" class="content-section">
+        <div class="bg-white rounded-lg shadow p-6">
+          <div class="flex justify-between items-center mb-6">
+            <h3 class="text-lg font-semibold text-gray-800">Delivery Addresses</h3>
+            <button class="bg-green-700 text-white px-4 py-2 rounded-md hover:bg-green-800">Add New Address</button>
+          </div>
+          <div class="space-y-4">
+            <div class="border rounded-lg p-4">
+              <div class="flex items-center justify-between mb-2">
+                <h4 class="font-medium text-gray-800">Home</h4>
+                <span class="text-sm bg-green-100 text-green-800 px-2 py-1 rounded">Default</span>
+              </div>
+              <p class="text-gray-600">123 Main Street, Barangay San Jose</p>
+              <p class="text-gray-600">Quezon City, Metro Manila 1100</p>
+              <p class="text-gray-600">Philippines</p>
+              <div class="mt-3">
+                <button class="text-blue-600 hover:underline mr-3">Edit</button>
+                <button class="text-red-600 hover:underline">Delete</button>
+              </div>
+            </div>
+            <div class="border rounded-lg p-4">
+              <div class="flex items-center justify-between mb-2">
+                <h4 class="font-medium text-gray-800">Office</h4>
+              </div>
+              <p class="text-gray-600">456 Business Ave, Makati CBD</p>
+              <p class="text-gray-600">Makati City, Metro Manila 1200</p>
+              <p class="text-gray-600">Philippines</p>
+              <div class="mt-3">
+                <button class="text-blue-600 hover:underline mr-3">Edit</button>
+                <button class="text-red-600 hover:underline">Delete</button>
+                <button class="text-green-600 hover:underline">Set as Default</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Payment Methods Content -->
+      <div id="payments-content" class="content-section">
+        <div class="bg-white rounded-lg shadow p-6">
+          <div class="flex justify-between items-center mb-6">
+            <h3 class="text-lg font-semibold text-gray-800">Payment Methods</h3>
+            <button class="bg-green-700 text-white px-4 py-2 rounded-md hover:bg-green-800">Add Payment Method</button>
+          </div>
+          <div class="space-y-4">
+            <div class="border rounded-lg p-4">
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center">
+                  <div class="w-12 h-8 bg-blue-600 rounded flex items-center justify-center mr-3">
+                    <span class="text-white font-semibold text-xs">VISA</span>
+                  </div>
+                  <div>
+                    <p class="font-medium text-gray-800">**** **** **** 1234</p>
+                    <p class="text-sm text-gray-600">Expires 12/25</p>
+                  </div>
+                </div>
+                <span class="text-sm bg-green-100 text-green-800 px-2 py-1 rounded">Default</span>
+              </div>
+              <div class="mt-3">
+                <button class="text-blue-600 hover:underline mr-3">Edit</button>
+                <button class="text-red-600 hover:underline">Delete</button>
+              </div>
+            </div>
+            <div class="border rounded-lg p-4">
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center">
+                  <div class="w-12 h-8 bg-yellow-500 rounded flex items-center justify-center mr-3">
+                    <span class="text-white font-semibold text-xs">GCASH</span>
+                  </div>
+                  <div>
+                    <p class="font-medium text-gray-800">GCash Wallet</p>
+                    <p class="text-sm text-gray-600">+63 917 *** 4567</p>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-3">
+                <button class="text-blue-600 hover:underline mr-3">Edit</button>
+                <button class="text-red-600 hover:underline">Delete</button>
+                <button class="text-green-600 hover:underline">Set as Default</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Notifications Content -->
+      <div id="notifications-content" class="content-section">
+        <div class="bg-white rounded-lg shadow p-6">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-semibold text-gray-800">Notifications</h3>
+            <button class="text-sm text-blue-600 hover:underline">Mark all as read</button>
+          </div>
+          <div class="space-y-4">
+            <div class="border-b pb-4">
+              <div class="flex items-start justify-between mb-2">
+                <div class="flex items-start">
+                  <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mr-3 mt-1">
+                    <svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M7 4V2a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v2H2a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h1v10a3 3 0 0 0 3 3h12a3 3 0 0 0 3-3V10h1a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1h-1V2a1 1 0 0 0-1-1h-2a1 1 0 0 0-1 1v2H7z"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <p class="font-medium text-gray-800">Order Shipped</p>
+                    <p class="text-gray-600 text-sm">Your order #ORD003 has been shipped and is on its way!</p>
+                  </div>
+                </div>
+                <span class="text-sm text-gray-500">2 hours ago</span>
+              </div>
+            </div>
+            <div class="border-b pb-4">
+              <div class="flex items-start justify-between mb-2">
+                <div class="flex items-start">
+                  <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3 mt-1">
+                    <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <p class="font-medium text-gray-800">Order Delivered</p>
+                    <p class="text-gray-600 text-sm">Your order #ORD001 has been successfully delivered.</p>
+                  </div>
+                </div>
+                <span class="text-sm text-gray-500">1 day ago</span>
+              </div>
+            </div>
+            <div>
+              <div class="flex items-start justify-between mb-2">
+                <div class="flex items-start">
+                  <div class="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center mr-3 mt-1">
+                    <svg class="w-5 h-5 text-yellow-600" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <p class="font-medium text-gray-800">New Products Available</p>
+                    <p class="text-gray-600 text-sm">Check out fresh organic vegetables from Green Valley Farm!</p>
+                  </div>
+                </div>
+                <span class="text-sm text-gray-500">3 days ago</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Help Content -->
+      <div id="help-content" class="content-section">
+        <div class="bg-white rounded-lg shadow p-6">
+          <h3 class="text-lg font-semibold text-gray-800 mb-6">Help & Support</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <h4 class="font-medium text-gray-800 mb-3">Frequently Asked Questions</h4>
+              <div class="space-y-3">
+                <div>
+                  <h5 class="font-medium text-gray-700">How do I track my order?</h5>
+                  <p class="text-sm text-gray-600 mt-1">You can track your order from the "My Orders" section or check your email for tracking updates.</p>
+                </div>
+                <div>
+                  <h5 class="font-medium text-gray-700">What payment methods do you accept?</h5>
+                  <p class="text-sm text-gray-600 mt-1">We accept credit/debit cards, GCash, PayMaya, and cash on delivery.</p>
+                </div>
+                <div>
+                  <h5 class="font-medium text-gray-700">How fresh are the products?</h5>
+                  <p class="text-sm text-gray-600 mt-1">All products are sourced directly from farms and delivered within 24-48 hours of harvest.</p>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h4 class="font-medium text-gray-800 mb-3">Contact Support</h4>
+              <div class="space-y-3">
+                <div>
+                  <h5 class="font-medium text-gray-700">Email Support</h5>
+                  <p class="text-sm text-gray-600 mt-1">support@harvesthub.com</p>
+                </div>
+                <div>
+                  <h5 class="font-medium text-gray-700">Phone Support</h5>
+                  <p class="text-sm text-gray-600 mt-1">+63 2 1234 5678</p>
+                  <p class="text-xs text-gray-500">Mon-Fri 8AM-6PM</p>
+                </div>
+                <div>
+                  <h5 class="font-medium text-gray-700">Live Chat</h5>
+                  <button class="text-sm bg-green-700 text-white px-3 py-1 rounded hover:bg-green-800 mt-1">Start Chat</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mt-6">
+            <h4 class="font-medium text-gray-800 mb-3">About Harvest Hub</h4>
+            <p class="text-gray-600">Harvest Hub connects you directly with local farmers, ensuring the freshest produce at fair prices. We're committed to supporting sustainable farming and bringing you the best of what Philippine farms have to offer.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Mobile menu toggle
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const sidebar = document.getElementById('sidebar');
+    const mobileOverlay = document.getElementById('mobileOverlay');
+    
+    mobileMenuBtn.addEventListener('click', () => {
+      sidebar.classList.toggle('mobile-open');
+      mobileOverlay.classList.toggle('active');
+    });
+    
+    mobileOverlay.addEventListener('click', () => {
+      sidebar.classList.remove('mobile-open');
+      mobileOverlay.classList.remove('active');
+    });
+    
+    // Sidebar navigation
+    const sidebarItems = document.querySelectorAll('.sidebar-item[data-section]');
+    const contentSections = document.querySelectorAll('.content-section');
+    const pageTitle = document.getElementById('pageTitle');
+    
+    sidebarItems.forEach(item => {
+      item.addEventListener('click', (e) => {
+        e.preventDefault();
+        
+        // Remove active class from all items
+        sidebarItems.forEach(i => i.classList.remove('active'));
+        
+        // Add active class to clicked item
+        item.classList.add('active');
+        
+        // Hide all content sections
+        contentSections.forEach(section => section.classList.remove('active'));
+        
+        // Show selected section
+        const sectionId = item.getAttribute('data-section');
+        document.getElementById(sectionId + '-content').classList.add('active');
+        
+        // Update page title
+        const sectionTitles = {
+          'dashboard': 'My Account',
+          'profile': 'Account Settings',
+          'orders': 'My Orders',
+          'favorites': 'My Favorites',
+          'addresses': 'Delivery Addresses',
+          'payments': 'Payment Methods',
+          'notifications': 'Notifications',
+          'help': 'Help & Support'
+        };
+        
+        pageTitle.textContent = sectionTitles[sectionId];
+        
+        // Close mobile menu
+        sidebar.classList.remove('mobile-open');
+        mobileOverlay.classList.remove('active');
+      });
+    });
+    
+    // Collapse sidebar on desktop
+    const sidebarToggle = document.createElement('button');
+    sidebarToggle.className = 'hidden md:flex items-center justify-center w-10 h-10 bg-green-600 text-white rounded-full absolute -right-5 top-20 z-10';
+    sidebarToggle.innerHTML = '<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>';
+    
+    sidebar.appendChild(sidebarToggle);
+    
+    sidebarToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('collapsed');
+      const icon = sidebarToggle.querySelector('svg');
+      if (sidebar.classList.contains('collapsed')) {
+        icon.style.transform = 'rotate(180deg)';
+      } else {
+        icon.style.transform = 'rotate(0deg)';
+      }
+    });
+  </script>
+</body>
+</html>
