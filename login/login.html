@@ -265,52 +265,209 @@
           <h1 class="text-xl font-semibold text-green-700">Harvest Hub</h1>
         </div>
 
-        <h2 class="text-2xl font-bold mb-2">Welcome back</h2>
-        <p class="text-gray-600 mb-6">Sign in to your account</p>
+        <!-- Step 1: Email Entry Form -->
+        <div id="emailEntryStep" class="step-container">
+          <h2 class="text-2xl font-bold mb-2 text-gray-800">Enter your email to continue</h2>
+          <p class="text-gray-600 mb-6">Log in to Harvest Hub using your email. If you don't have an account yet, you'll be prompted to create one.</p>
 
-        <form id="loginForm" action="/login" method="POST" class="space-y-4" novalidate>
-          <div>
-            <label for="email" class="block text-sm font-medium text-gray-700">Your email</label>
-            <input type="email" name="email" id="email" class="w-full border border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-green-600" required>
-            <div id="email-error" class="error-message" style="display: none;">
-              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
-              </svg>
-              <span id="email-error-text">Please enter a valid email address</span>
-            </div>
-          </div>
-
-          <div>
-            <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
-            <div class="relative">
-              <input type="password" name="password" id="password" class="w-full border border-gray-300 rounded-md px-3 py-2 mt-1 pr-10 focus:outline-none focus:ring-2 focus:ring-green-600" required>
-              <button type="button" onclick="togglePassword('password')" class="absolute inset-y-0 right-0 pr-3 flex items-center">
-                <svg id="password-eye" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+          <form id="emailCheckForm" class="space-y-4" novalidate>
+            <div>
+              <label for="initialEmail" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+              <input type="email" name="email" id="initialEmail" class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent" placeholder="" required>
+              <div id="initial-email-error" class="error-message" style="display: none;">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
                 </svg>
-              </button>
+                <span id="initial-email-error-text">Please enter a valid email address</span>
+              </div>
             </div>
-            <div id="password-error" class="error-message" style="display: none;">
-              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
-              </svg>
-              <span id="password-error-text">Password is required</span>
+
+            <button type="submit" class="w-full bg-green-700 text-white font-semibold py-3 rounded-md hover:bg-green-800 transition">Proceed</button>
+          </form>
+
+          <p class="text-sm text-gray-600 mt-4 text-center">Already have an account? <a href="#" id="directLoginLink" class="text-green-700 font-semibold hover:underline">Login here</a></p>
+        </div>
+
+        <!-- Step 2: Login Form (for existing users) -->
+        <div id="loginStep" class="step-container" style="display: none;">
+          <h2 class="text-2xl font-bold mb-2 text-gray-800">Good news, you already have a Harvest Hub account</h2>
+          <p class="text-gray-600 mb-2">Since you've already used this email to sign up for HarvestHub, you can now log in using:</p>
+          <p class="text-sm text-green-700 mb-2"><span id="userEmail">youremail@example.com</span> <a href="#" id="editEmailLink" class="text-blue-600 hover:underline">edit</a></p>
+          <p class="text-gray-600 mb-6">Please enter your current password to continue.</p>
+
+          <form id="loginForm" class="space-y-4" novalidate>
+            <div>
+              <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+              <div class="relative">
+                <input type="password" name="password" id="password" class="w-full border border-gray-300 rounded-md px-4 py-3 pr-12 focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent" placeholder="" required>
+                <button type="button" onclick="togglePassword('password')" class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                  <svg id="password-eye" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                </button>
+              </div>
+              <div id="password-error" class="error-message" style="display: none;">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                </svg>
+                <span id="password-error-text">Password is required</span>
+              </div>
             </div>
-          </div>
 
-          <div class="flex items-center justify-between mb-4">
-            <div class="flex items-center">
-              <input type="checkbox" id="remember" name="remember" class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded">
-              <label for="remember" class="ml-2 block text-sm text-gray-700">Remember me</label>
+            <button type="submit" class="w-full bg-green-700 text-white font-semibold py-3 rounded-md hover:bg-green-800 transition">Login</button>
+          </form>
+
+          <p class="text-sm text-gray-600 mt-4 text-center">Having Trouble logging in? <a href="#" class="text-green-700 hover:underline" id="forgotPasswordLink">Forgot Password?</a></p>
+        </div>
+
+        <!-- Step 3: Create Account Form (for new users) -->
+        <div id="createAccountStep" class="step-container" style="display: none;">
+          <h2 class="text-2xl font-bold mb-6 text-gray-800">Create an account to continue</h2>
+
+          <form id="createAccountForm" class="space-y-4" novalidate>
+            <div>
+              <label for="firstName" class="block text-sm font-medium text-gray-700 mb-2">First name</label>
+              <input type="text" name="firstName" id="firstName" class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent" placeholder="" required>
+              <div id="firstName-error" class="error-message" style="display: none;">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                </svg>
+                <span id="firstName-error-text">First name is required</span>
+              </div>
             </div>
-            <a href="#" class="text-sm text-green-700 hover:underline" id="forgotPasswordLink">Forgot password?</a>
-          </div>
 
-          <button type="submit" class="w-full bg-green-700 text-white font-semibold py-2 rounded-md hover:bg-green-800 transition">Login</button>
-        </form>
+            <div>
+              <label for="lastName" class="block text-sm font-medium text-gray-700 mb-2">Last name</label>
+              <input type="text" name="lastName" id="lastName" class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent" placeholder="" required>
+              <div id="lastName-error" class="error-message" style="display: none;">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                </svg>
+                <span id="lastName-error-text">Last name is required</span>
+              </div>
+            </div>
 
-        <p class="text-sm text-gray-600 mt-4 text-center">Don't have an account? <a href="../createaccount/createaccount.html" class="text-green-700 font-semibold hover:underline">Create one here</a></p>
+            <div>
+              <label for="createEmail" class="block text-sm font-medium text-gray-700 mb-2">Your email</label>
+              <input type="email" name="email" id="createEmail" class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent bg-gray-50" readonly>
+            </div>
+
+            <div>
+              <label for="createPassword" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+              <div class="relative">
+                <input type="password" name="password" id="createPassword" class="w-full border border-gray-300 rounded-md px-4 py-3 pr-12 focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent" placeholder="" required>
+                <button type="button" onclick="togglePassword('createPassword')" class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                  <svg id="createPassword-eye" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                </button>
+              </div>
+              <div id="createPassword-error" class="error-message" style="display: none;">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                </svg>
+                <span id="createPassword-error-text">Password must be at least 6 characters</span>
+              </div>
+            </div>
+
+            <div>
+              <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-2">Confirm password</label>
+              <div class="relative">
+                <input type="password" name="confirmPassword" id="confirmPassword" class="w-full border border-gray-300 rounded-md px-4 py-3 pr-12 focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent" placeholder="" required>
+                <button type="button" onclick="togglePassword('confirmPassword')" class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                  <svg id="confirmPassword-eye" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                </button>
+              </div>
+              <div id="confirmPassword-error" class="error-message" style="display: none;">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                </svg>
+                <span id="confirmPassword-error-text">Passwords do not match</span>
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <div class="flex items-center">
+                <input type="checkbox" id="agreeTerms" name="agreeTerms" class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded" required>
+                <label for="agreeTerms" class="ml-2 block text-sm text-gray-700">I accept the <a href="../createaccount/terms.html" target="_blank" rel="noopener noreferrer" class="text-green-700 hover:underline">Terms and Conditions</a></label>
+              </div>
+              <div id="agreeTerms-error" class="error-message" style="display: none;">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                </svg>
+                <span id="agreeTerms-error-text">Please accept the Terms and Conditions</span>
+              </div>
+              <div class="flex items-center">
+                <input type="checkbox" id="agreePrivacy" name="agreePrivacy" class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded" required>
+                <label for="agreePrivacy" class="ml-2 block text-sm text-gray-700">I have read the and understood the <a href="../createaccount/privacy-policy.html" target="_blank" rel="noopener noreferrer" class="text-green-700 hover:underline">Privacy Policy</a></label>
+              </div>
+              <div id="agreePrivacy-error" class="error-message" style="display: none;">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                </svg>
+                <span id="agreePrivacy-error-text">Please accept the Privacy Policy</span>
+              </div>
+            </div>
+
+            <button type="submit" class="w-full bg-green-700 text-white font-semibold py-3 rounded-md hover:bg-green-800 transition">Create an account</button>
+          </form>
+
+          <p class="text-sm text-gray-600 mt-4 text-center">Already have an account? <a href="#" id="backToLoginLink" class="text-green-700 font-semibold hover:underline">Login here</a></p>
+        </div>
+
+        <!-- Step 4: Traditional Login Form (accessible via "Login here" links) -->
+        <div id="traditionalLoginStep" class="step-container" style="display: none;">
+          <h2 class="text-2xl font-bold mb-6 text-gray-800">Login to your account</h2>
+
+          <form id="traditionalLoginForm" class="space-y-4" novalidate>
+            <div>
+              <label for="loginEmail" class="block text-sm font-medium text-gray-700 mb-2">Email address</label>
+              <input type="email" name="email" id="loginEmail" class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent" placeholder="" required>
+              <div id="loginEmail-error" class="error-message" style="display: none;">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                </svg>
+                <span id="loginEmail-error-text">Please enter a valid email address</span>
+              </div>
+            </div>
+
+            <div>
+              <label for="loginPassword" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+              <div class="relative">
+                <input type="password" name="password" id="loginPassword" class="w-full border border-gray-300 rounded-md px-4 py-3 pr-12 focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent" placeholder="" required>
+                <button type="button" onclick="togglePassword('loginPassword')" class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                  <svg id="loginPassword-eye" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                </button>
+              </div>
+              <div id="loginPassword-error" class="error-message" style="display: none;">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                </svg>
+                <span id="loginPassword-error-text">Password is required</span>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <input type="checkbox" id="rememberMe" name="rememberMe" class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded">
+                <label for="rememberMe" class="ml-2 block text-sm text-gray-700">Remember me</label>
+              </div>
+              <a href="#" class="text-sm text-green-700 hover:underline" id="traditionalForgotPasswordLink">Forgot Password?</a>
+            </div>
+
+            <button type="submit" class="w-full bg-green-700 text-white font-semibold py-3 rounded-md hover:bg-green-800 transition">Login</button>
+          </form>
+
+          <p class="text-sm text-gray-600 mt-4 text-center">Don't have an account yet? <a href="#" id="signUpLink" class="text-green-700 font-semibold hover:underline">Sign up</a></p>
+        </div>
       </div>
     </div>
   </div>
@@ -370,28 +527,111 @@
 
   <script src="../js/api.js"></script>
   <script>
-    // Form Validation
+    // Multi-step form management
+    let currentStep = 'emailEntry';
+    let userEmail = '';
+
+    // Step navigation functions
+    function showStep(stepName) {
+      document.querySelectorAll('.step-container').forEach(step => {
+        step.style.display = 'none';
+      });
+      
+      const targetStep = document.getElementById(stepName + 'Step');
+      if (targetStep) {
+        targetStep.style.display = 'block';
+        currentStep = stepName;
+      }
+    }
+
+    // Email check form handler (Step 1)
+    document.getElementById('emailCheckForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const emailInput = document.getElementById('initialEmail');
+      const email = emailInput.value.trim();
+      
+      // Reset validation
+      clearValidation(emailInput);
+      
+      if (!email) {
+        showError(emailInput, 'initial-email-error', 'Please enter your email address');
+        return;
+      }
+      
+      if (!isValidEmail(email)) {
+        showError(emailInput, 'initial-email-error', 'Please enter a valid email address');
+        return;
+      }
+      
+      userEmail = email;
+      
+      // Show loading state
+      const submitBtn = this.querySelector('button[type="submit"]');
+      const originalText = submitBtn.textContent;
+      submitBtn.textContent = 'Checking...';
+      submitBtn.disabled = true;
+      
+      try {
+        // Simulate checking if user exists (replace with actual API call)
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // Simulate random result for demo (replace with actual logic)
+        const userExists = Math.random() > 0.5; // 50% chance user exists for demo
+        
+        if (userExists) {
+          // User exists, show login form (Step 2)
+          document.getElementById('userEmail').textContent = email;
+          showStep('login');
+        } else {
+          // New user, show create account form (Step 3)
+          document.getElementById('createEmail').value = email;
+          showStep('createAccount');
+        }
+        
+      } catch (error) {
+        console.error('Email check error:', error);
+        showError(emailInput, 'initial-email-error', 'Something went wrong. Please try again.');
+      } finally {
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+      }
+    });
+
+    // Direct login link handler (Step 1 -> Step 4)
+    document.getElementById('directLoginLink').addEventListener('click', function(e) {
+      e.preventDefault();
+      showStep('traditionalLogin');
+    });
+
+    // Edit email link handler (Step 2 -> Step 1)
+    document.getElementById('editEmailLink').addEventListener('click', function(e) {
+      e.preventDefault();
+      document.getElementById('initialEmail').value = userEmail;
+      showStep('emailEntry');
+    });
+
+    // Back to login link handler (Step 3 -> Step 2)
+    document.getElementById('backToLoginLink').addEventListener('click', function(e) {
+      e.preventDefault();
+      showStep('login');
+    });
+
+    // Sign up link handler (Step 4 -> Step 1)
+    document.getElementById('signUpLink').addEventListener('click', function(e) {
+      e.preventDefault();
+      showStep('emailEntry');
+    });
+
+    // Login Form Validation
     document.getElementById('loginForm').addEventListener('submit', async function(e) {
       e.preventDefault();
       
-      const email = document.getElementById('email');
       const password = document.getElementById('password');
       let isValid = true;
       
       // Reset previous validation states
-      clearValidation(email);
       clearValidation(password);
-      
-      // Validate email
-      if (!email.value.trim()) {
-        showError(email, 'email-error', 'Please enter your email address');
-        isValid = false;
-      } else if (!isValidEmail(email.value)) {
-        showError(email, 'email-error', 'Please enter a valid email address');
-        isValid = false;
-      } else {
-        showSuccess(email);
-      }
       
       // Validate password
       if (!password.value.trim()) {
@@ -413,14 +653,181 @@
           submitBtn.textContent = 'Logging in...';
           submitBtn.disabled = true;
 
-          await api.login(email.value, password.value);
+          await api.login({ email: userEmail, password: password.value });
           
           // Login successful, redirect to main page
-          window.location.href = '../main.html';
+          window.location.href = '../maindashboard/main.html';
           
         } catch (error) {
           console.error('Login error:', error);
-          showError(email, 'email-error', error.message || 'Login failed. Please try again.');
+          showError(password, 'password-error', error.message || 'Login failed. Please try again.');
+          
+          // Reset button
+          const submitBtn = this.querySelector('button[type="submit"]');
+          submitBtn.textContent = originalText;
+          submitBtn.disabled = false;
+        }
+      }
+    });
+
+    // Create Account Form Validation
+    document.getElementById('createAccountForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const firstName = document.getElementById('firstName');
+      const lastName = document.getElementById('lastName');
+      const createPassword = document.getElementById('createPassword');
+      const confirmPassword = document.getElementById('confirmPassword');
+      const agreeTerms = document.getElementById('agreeTerms');
+      const agreePrivacy = document.getElementById('agreePrivacy');
+      let isValid = true;
+      
+      // Reset previous validation states
+      clearValidation(firstName);
+      clearValidation(lastName);
+      clearValidation(createPassword);
+      clearValidation(confirmPassword);
+      clearValidation(agreeTerms);
+      clearValidation(agreePrivacy);
+      
+      // Validate first name
+      if (!firstName.value.trim()) {
+        showError(firstName, 'firstName-error', 'First name is required');
+        isValid = false;
+      } else {
+        showSuccess(firstName);
+      }
+      
+      // Validate last name
+      if (!lastName.value.trim()) {
+        showError(lastName, 'lastName-error', 'Last name is required');
+        isValid = false;
+      } else {
+        showSuccess(lastName);
+      }
+      
+      // Validate password
+      if (!createPassword.value.trim()) {
+        showError(createPassword, 'createPassword-error', 'Password is required');
+        isValid = false;
+      } else if (createPassword.value.length < 6) {
+        showError(createPassword, 'createPassword-error', 'Password must be at least 6 characters');
+        isValid = false;
+      } else {
+        showSuccess(createPassword);
+      }
+      
+      // Validate confirm password
+      if (!confirmPassword.value.trim()) {
+        showError(confirmPassword, 'confirmPassword-error', 'Please confirm your password');
+        isValid = false;
+      } else if (confirmPassword.value !== createPassword.value) {
+        showError(confirmPassword, 'confirmPassword-error', 'Passwords do not match');
+        isValid = false;
+      } else {
+        showSuccess(confirmPassword);
+      }
+      
+      // Validate checkboxes
+      if (!agreeTerms.checked) {
+        showError(agreeTerms, 'agreeTerms-error', 'Please accept the Terms and Conditions');
+        isValid = false;
+      } else {
+        clearValidation(agreeTerms);
+      }
+      
+      if (!agreePrivacy.checked) {
+        showError(agreePrivacy, 'agreePrivacy-error', 'Please accept the Privacy Policy');
+        isValid = false;
+      } else {
+        clearValidation(agreePrivacy);
+      }
+      
+      // If valid, submit to API
+      if (isValid) {
+        try {
+          // Show loading state
+          const submitBtn = this.querySelector('button[type="submit"]');
+          const originalText = submitBtn.textContent;
+          submitBtn.textContent = 'Creating account...';
+          submitBtn.disabled = true;
+
+          const userData = {
+            fullName: `${firstName.value.trim()} ${lastName.value.trim()}`,
+            firstName: firstName.value.trim(),
+            lastName: lastName.value.trim(),
+            email: userEmail,
+            password: createPassword.value
+          };
+
+          await api.register(userData);
+          
+          // Registration successful, redirect to main page
+          window.location.href = '../maindashboard/main.html';
+          
+        } catch (error) {
+          console.error('Registration error:', error);
+          alert(error.message || 'Registration failed. Please try again.');
+          
+          // Reset button
+          const submitBtn = this.querySelector('button[type="submit"]');
+          submitBtn.textContent = originalText;
+          submitBtn.disabled = false;
+        }
+      }
+    });
+
+    // Traditional Login Form Validation (Step 4)
+    document.getElementById('traditionalLoginForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const email = document.getElementById('loginEmail');
+      const password = document.getElementById('loginPassword');
+      let isValid = true;
+      
+      // Reset previous validation states
+      clearValidation(email);
+      clearValidation(password);
+      
+      // Validate email
+      if (!email.value.trim()) {
+        showError(email, 'loginEmail-error', 'Please enter your email address');
+        isValid = false;
+      } else if (!isValidEmail(email.value)) {
+        showError(email, 'loginEmail-error', 'Please enter a valid email address');
+        isValid = false;
+      } else {
+        showSuccess(email);
+      }
+      
+      // Validate password
+      if (!password.value.trim()) {
+        showError(password, 'loginPassword-error', 'Please enter your password');
+        isValid = false;
+      } else if (password.value.length < 6) {
+        showError(password, 'loginPassword-error', 'Password must be at least 6 characters');
+        isValid = false;
+      } else {
+        showSuccess(password);
+      }
+      
+      // If valid, submit to API
+      if (isValid) {
+        try {
+          // Show loading state
+          const submitBtn = this.querySelector('button[type="submit"]');
+          const originalText = submitBtn.textContent;
+          submitBtn.textContent = 'Logging in...';
+          submitBtn.disabled = true;
+
+          await api.login({ email: email.value, password: password.value });
+          
+          // Login successful, redirect to main page
+          window.location.href = '../maindashboard/main.html';
+          
+        } catch (error) {
+          console.error('Login error:', error);
+          showError(email, 'loginEmail-error', error.message || 'Login failed. Please try again.');
           
           // Reset button
           const submitBtn = this.querySelector('button[type="submit"]');
@@ -430,13 +837,18 @@
       }
     });
     
+    // Helper functions
     function showError(input, errorId, message) {
       input.classList.add('input-error');
       input.classList.remove('input-success');
       const errorDiv = document.getElementById(errorId);
       const errorText = document.getElementById(errorId + '-text');
-      errorText.textContent = message;
-      errorDiv.style.display = 'flex';
+      if (errorText) {
+        errorText.textContent = message;
+      }
+      if (errorDiv) {
+        errorDiv.style.display = 'flex';
+      }
     }
     
     function showSuccess(input) {
@@ -458,22 +870,76 @@
       return emailRegex.test(email);
     }
     
-    // Real-time validation
-    document.getElementById('email').addEventListener('blur', function() {
+    // Real-time validation for email entry
+    document.getElementById('initialEmail').addEventListener('blur', function() {
       if (this.value.trim() && !isValidEmail(this.value)) {
-        showError(this, 'email-error', 'Please enter a valid email address');
+        showError(this, 'initial-email-error', 'Please enter a valid email address');
       } else if (this.value.trim()) {
         showSuccess(this);
-        document.getElementById('email-error').style.display = 'none';
+        document.getElementById('initial-email-error').style.display = 'none';
       }
     });
     
+    // Real-time validation for login password
     document.getElementById('password').addEventListener('blur', function() {
       if (this.value.trim() && this.value.length < 6) {
         showError(this, 'password-error', 'Password must be at least 6 characters');
       } else if (this.value.trim()) {
         showSuccess(this);
         document.getElementById('password-error').style.display = 'none';
+      }
+    });
+
+    // Real-time validation for create account fields
+    document.getElementById('firstName').addEventListener('blur', function() {
+      if (this.value.trim()) {
+        showSuccess(this);
+        document.getElementById('firstName-error').style.display = 'none';
+      }
+    });
+
+    document.getElementById('lastName').addEventListener('blur', function() {
+      if (this.value.trim()) {
+        showSuccess(this);
+        document.getElementById('lastName-error').style.display = 'none';
+      }
+    });
+
+    document.getElementById('createPassword').addEventListener('blur', function() {
+      if (this.value.trim() && this.value.length < 6) {
+        showError(this, 'createPassword-error', 'Password must be at least 6 characters');
+      } else if (this.value.trim()) {
+        showSuccess(this);
+        document.getElementById('createPassword-error').style.display = 'none';
+      }
+    });
+
+    document.getElementById('confirmPassword').addEventListener('blur', function() {
+      const createPassword = document.getElementById('createPassword').value;
+      if (this.value.trim() && this.value !== createPassword) {
+        showError(this, 'confirmPassword-error', 'Passwords do not match');
+      } else if (this.value.trim()) {
+        showSuccess(this);
+        document.getElementById('confirmPassword-error').style.display = 'none';
+      }
+    });
+
+    // Real-time validation for traditional login form fields
+    document.getElementById('loginEmail').addEventListener('blur', function() {
+      if (this.value.trim() && !isValidEmail(this.value)) {
+        showError(this, 'loginEmail-error', 'Please enter a valid email address');
+      } else if (this.value.trim()) {
+        showSuccess(this);
+        document.getElementById('loginEmail-error').style.display = 'none';
+      }
+    });
+
+    document.getElementById('loginPassword').addEventListener('blur', function() {
+      if (this.value.trim() && this.value.length < 6) {
+        showError(this, 'loginPassword-error', 'Password must be at least 6 characters');
+      } else if (this.value.trim()) {
+        showSuccess(this);
+        document.getElementById('loginPassword-error').style.display = 'none';
       }
     });
 
@@ -497,6 +963,7 @@
 
     // Forgot Password Modal Functionality
     const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+    const traditionalForgotPasswordLink = document.getElementById('traditionalForgotPasswordLink');
     const forgotPasswordModal = document.getElementById('forgotPasswordModal');
     const closeModal = document.getElementById('closeModal');
     const cancelModal = document.getElementById('cancelModal');
@@ -505,97 +972,126 @@
     const resetSuccessMessage = document.getElementById('resetSuccessMessage');
     const resetSubmitBtn = document.getElementById('resetSubmitBtn');
 
-    // Open modal
-    forgotPasswordLink.addEventListener('click', function(e) {
-      e.preventDefault();
-      forgotPasswordModal.classList.add('active');
-      resetEmailInput.focus();
-    });
+    // Open modal from Step 2 login form
+    if (forgotPasswordLink) {
+      forgotPasswordLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        forgotPasswordModal.classList.add('active');
+        resetEmailInput.value = userEmail; // Pre-fill with current email
+        resetEmailInput.focus();
+      });
+    }
+
+    // Open modal from Step 4 traditional login form
+    if (traditionalForgotPasswordLink) {
+      traditionalForgotPasswordLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        forgotPasswordModal.classList.add('active');
+        const currentEmail = document.getElementById('loginEmail').value;
+        if (currentEmail) {
+          resetEmailInput.value = currentEmail; // Pre-fill with current email if available
+        }
+        resetEmailInput.focus();
+      });
+    }
 
     // Close modal functions
     function closeForgotPasswordModal() {
       forgotPasswordModal.classList.remove('active');
-      forgotPasswordForm.reset();
-      resetSuccessMessage.style.display = 'none';
-      clearValidation(resetEmailInput);
-      resetSubmitBtn.disabled = false;
-      resetSubmitBtn.textContent = 'Send Reset Link';
+      if (forgotPasswordForm) forgotPasswordForm.reset();
+      if (resetSuccessMessage) resetSuccessMessage.style.display = 'none';
+      if (resetEmailInput) clearValidation(resetEmailInput);
+      if (resetSubmitBtn) {
+        resetSubmitBtn.disabled = false;
+        resetSubmitBtn.textContent = 'Send Reset Link';
+      }
     }
 
-    closeModal.addEventListener('click', closeForgotPasswordModal);
-    cancelModal.addEventListener('click', closeForgotPasswordModal);
+    if (closeModal) {
+      closeModal.addEventListener('click', closeForgotPasswordModal);
+    }
+
+    if (cancelModal) {
+      cancelModal.addEventListener('click', closeForgotPasswordModal);
+    }
 
     // Close modal when clicking outside
-    forgotPasswordModal.addEventListener('click', function(e) {
-      if (e.target === forgotPasswordModal) {
-        closeForgotPasswordModal();
-      }
-    });
+    if (forgotPasswordModal) {
+      forgotPasswordModal.addEventListener('click', function(e) {
+        if (e.target === forgotPasswordModal) {
+          closeForgotPasswordModal();
+        }
+      });
+    }
 
     // Close modal with Escape key
     document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape' && forgotPasswordModal.classList.contains('active')) {
+      if (e.key === 'Escape' && forgotPasswordModal && forgotPasswordModal.classList.contains('active')) {
         closeForgotPasswordModal();
       }
     });
 
     // Email validation for reset form
-    resetEmailInput.addEventListener('blur', function() {
-      if (this.value.trim() && !isValidEmail(this.value)) {
-        showError(this, 'resetEmail-error', 'Please enter a valid email address');
-      } else if (this.value.trim()) {
-        showSuccess(this);
-        document.getElementById('resetEmail-error').style.display = 'none';
-      }
-    });
+    if (resetEmailInput) {
+      resetEmailInput.addEventListener('blur', function() {
+        if (this.value.trim() && !isValidEmail(this.value)) {
+          showError(this, 'resetEmail-error', 'Please enter a valid email address');
+        } else if (this.value.trim()) {
+          showSuccess(this);
+          document.getElementById('resetEmail-error').style.display = 'none';
+        }
+      });
+    }
 
     // Handle forgot password form submission
-    forgotPasswordForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-      
-      const email = resetEmailInput.value.trim();
-      let isValid = true;
+    if (forgotPasswordForm) {
+      forgotPasswordForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const email = resetEmailInput.value.trim();
+        let isValid = true;
 
-      // Reset previous validation states
-      clearValidation(resetEmailInput);
+        // Reset previous validation states
+        clearValidation(resetEmailInput);
 
-      // Validate email
-      if (!email) {
-        showError(resetEmailInput, 'resetEmail-error', 'Please enter your email address');
-        isValid = false;
-      } else if (!isValidEmail(email)) {
-        showError(resetEmailInput, 'resetEmail-error', 'Please enter a valid email address');
-        isValid = false;
-      } else {
-        showSuccess(resetEmailInput);
-      }
+        // Validate email
+        if (!email) {
+          showError(resetEmailInput, 'resetEmail-error', 'Please enter your email address');
+          isValid = false;
+        } else if (!isValidEmail(email)) {
+          showError(resetEmailInput, 'resetEmail-error', 'Please enter a valid email address');
+          isValid = false;
+        } else {
+          showSuccess(resetEmailInput);
+        }
 
-      if (isValid) {
-        // Disable button and show loading state
-        resetSubmitBtn.disabled = true;
-        resetSubmitBtn.textContent = 'Sending...';
+        if (isValid) {
+          // Disable button and show loading state
+          resetSubmitBtn.disabled = true;
+          resetSubmitBtn.textContent = 'Sending...';
 
-        // Simulate API call (replace with actual API call)
-        setTimeout(() => {
-          // Show success message
-          resetSuccessMessage.style.display = 'flex';
-          
-          // Reset button
-          resetSubmitBtn.disabled = false;
-          resetSubmitBtn.textContent = 'Send Reset Link';
-          
-          // Clear form
-          forgotPasswordForm.reset();
-          clearValidation(resetEmailInput);
-          
-          // Auto-close modal after 3 seconds
+          // Simulate API call (replace with actual API call)
           setTimeout(() => {
-            closeForgotPasswordModal();
-          }, 3000);
-          
-        }, 1500); // Simulate network delay
-      }
-    });
+            // Show success message
+            resetSuccessMessage.style.display = 'flex';
+            
+            // Reset button
+            resetSubmitBtn.disabled = false;
+            resetSubmitBtn.textContent = 'Send Reset Link';
+            
+            // Clear form
+            forgotPasswordForm.reset();
+            clearValidation(resetEmailInput);
+            
+            // Auto-close modal after 3 seconds
+            setTimeout(() => {
+              closeForgotPasswordModal();
+            }, 3000);
+            
+          }, 1500); // Simulate network delay
+        }
+      });
+    }
   </script>
 </body>
 </html>

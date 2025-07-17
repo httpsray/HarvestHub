@@ -49,6 +49,37 @@
     .bg-mint-fresh { background-color: #ecfdf5; }
     .text-fresh-green { color: #166534; }
     .text-soft-green { color: #15803d; }
+    
+    /* Banner rotation styles */
+    .ad-slide {
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+    }
+    
+    .ad-slide.active {
+      display: block;
+      position: relative;
+      opacity: 1;
+    }
+    
+    .banner-dot {
+      transition: opacity 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .banner-dot.active {
+      opacity: 1 !important;
+    }
+    
+    /* Hover effects for clickable elements */
+    .cursor-pointer:hover {
+      transform: translateY(-1px);
+    }
   </style>
 </head>
 <body class="bg-soft-green h-screen flex flex-col overflow-hidden">
@@ -161,22 +192,69 @@
   <!-- Main Content -->
   <main class="flex-1 overflow-y-auto bg-mint-fresh min-h-0">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 h-full">
-    <!-- Hero Banner -->
+    <!-- Hero Banner with Rotating Ads -->
     <div class="mb-4">
-      <div class="gradient-green-light rounded-xl p-6 text-white relative overflow-hidden">
-        <div class="relative z-10">
-          <h2 class="text-2xl font-bold mb-2">Fresh Farm-to-Table Marketplace 🌱</h2>
-          <p class="text-green-50 mb-4">Discover premium organic produce directly from local farmers</p>
-          <button class="bg-white text-green-600 px-6 py-2 rounded-lg font-medium hover:bg-green-50 transition-colors">
-            Shop Now
-          </button>
+      <div class="relative overflow-hidden rounded-xl">
+        <!-- Ad Banner 1 -->
+        <div class="ad-slide active gradient-green-light rounded-xl p-6 text-white relative overflow-hidden cursor-pointer" onclick="redirectToProduct('organic-bundle-special')">
+          <div class="relative z-10">
+            <div class="flex items-center justify-between">
+              <div>
+                <h2 class="text-2xl font-bold mb-2">🌱 Organic Bundle Special!</h2>
+                <p class="text-green-50 mb-4">Save 40% on premium organic vegetables</p>
+                <span class="bg-white text-green-600 px-6 py-2 rounded-lg font-medium hover:bg-green-50 transition-colors inline-block">
+                  Shop Now - Only $19.99
+                </span>
+              </div>
+              <div class="text-6xl opacity-50">🥕</div>
+            </div>
+          </div>
+          <div class="absolute top-0 right-0 w-32 h-32 opacity-20">
+            <svg viewBox="0 0 100 100" fill="currentColor">
+              <circle cx="50" cy="50" r="40"/>
+              <circle cx="20" cy="30" r="15"/>
+              <circle cx="80" cy="20" r="10"/>
+            </svg>
+          </div>
         </div>
-        <div class="absolute top-0 right-0 w-32 h-32 opacity-20">
-          <svg viewBox="0 0 100 100" fill="currentColor">
-            <circle cx="50" cy="50" r="40"/>
-            <circle cx="20" cy="30" r="15"/>
-            <circle cx="80" cy="20" r="10"/>
-          </svg>
+
+        <!-- Ad Banner 2 -->
+        <div class="ad-slide gradient-green-soft rounded-xl p-6 text-white relative overflow-hidden cursor-pointer" onclick="redirectToProduct('fruit-festival')">
+          <div class="relative z-10">
+            <div class="flex items-center justify-between">
+              <div>
+                <h2 class="text-2xl font-bold mb-2">🍎 Summer Fruit Festival</h2>
+                <p class="text-green-50 mb-4">Fresh seasonal fruits at unbeatable prices</p>
+                <span class="bg-white text-green-600 px-6 py-2 rounded-lg font-medium hover:bg-green-50 transition-colors inline-block">
+                  Explore Deals
+                </span>
+              </div>
+              <div class="text-6xl opacity-50">🍓</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ad Banner 3 -->
+        <div class="ad-slide gradient-green-mint rounded-xl p-6 text-white relative overflow-hidden cursor-pointer" onclick="redirectToProduct('dairy-special')">
+          <div class="relative z-10">
+            <div class="flex items-center justify-between">
+              <div>
+                <h2 class="text-2xl font-bold mb-2">🥛 Farm Fresh Dairy</h2>
+                <p class="text-green-50 mb-4">Premium dairy products from Mountain Dairy</p>
+                <span class="bg-white text-green-600 px-6 py-2 rounded-lg font-medium hover:bg-green-50 transition-colors inline-block">
+                  Order Fresh
+                </span>
+              </div>
+              <div class="text-6xl opacity-50">🧀</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Banner Navigation Dots -->
+        <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-20">
+          <button class="banner-dot active w-3 h-3 rounded-full bg-white" onclick="showBanner(0)"></button>
+          <button class="banner-dot w-3 h-3 rounded-full bg-white opacity-50" onclick="showBanner(1)"></button>
+          <button class="banner-dot w-3 h-3 rounded-full bg-white opacity-50" onclick="showBanner(2)"></button>
         </div>
       </div>
     </div>
@@ -205,11 +283,11 @@
     <div class="mb-6">
       <div class="flex items-center justify-between mb-4">
         <h3 class="text-xl font-bold text-fresh-green">Featured Farmers</h3>
-        <a href="#" class="text-green-600 hover:text-green-700 text-sm font-medium">View All</a>
+        <a href="farmers-listing.html" class="text-green-600 hover:text-green-700 text-sm font-medium">View All</a>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <!-- Farmer Card 1 -->
-        <div class="dashboard-card bg-white rounded-lg shadow-sm border border-green-100 p-4">
+        <div class="dashboard-card bg-white rounded-lg shadow-sm border border-green-100 p-4 cursor-pointer" onclick="redirectToFarmer('green-valley-farm')">
           <div class="flex items-center space-x-3 mb-3">
             <div class="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
               GV
@@ -225,14 +303,14 @@
               <span class="text-yellow-400">★★★★★</span>
               <span class="text-sm text-gray-600">(4.9)</span>
             </div>
-            <button class="bg-green-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-green-700 transition-colors">
+            <button onclick="event.stopPropagation(); redirectToFarmerProducts('green-valley-farm')" class="bg-green-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-green-700 transition-colors">
               View Products
             </button>
           </div>
         </div>
 
         <!-- Farmer Card 2 -->
-        <div class="dashboard-card bg-white rounded-lg shadow-sm border border-green-100 p-4">
+        <div class="dashboard-card bg-white rounded-lg shadow-sm border border-green-100 p-4 cursor-pointer" onclick="redirectToFarmer('sunrise-orchard')">
           <div class="flex items-center space-x-3 mb-3">
             <div class="w-12 h-12 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
               SO
@@ -248,14 +326,14 @@
               <span class="text-yellow-400">★★★★★</span>
               <span class="text-sm text-gray-600">(4.8)</span>
             </div>
-            <button class="bg-green-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-green-700 transition-colors">
+            <button onclick="event.stopPropagation(); redirectToFarmerProducts('sunrise-orchard')" class="bg-green-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-green-700 transition-colors">
               View Products
             </button>
           </div>
         </div>
 
         <!-- Farmer Card 3 -->
-        <div class="dashboard-card bg-white rounded-lg shadow-sm border border-green-100 p-4">
+        <div class="dashboard-card bg-white rounded-lg shadow-sm border border-green-100 p-4 cursor-pointer" onclick="redirectToFarmer('mountain-dairy')">
           <div class="flex items-center space-x-3 mb-3">
             <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
               MD
@@ -271,7 +349,7 @@
               <span class="text-yellow-400">★★★★★</span>
               <span class="text-sm text-gray-600">(4.7)</span>
             </div>
-            <button class="bg-green-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-green-700 transition-colors">
+            <button onclick="event.stopPropagation(); redirectToFarmerProducts('mountain-dairy')" class="bg-green-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-green-700 transition-colors">
               View Products
             </button>
           </div>
@@ -283,11 +361,11 @@
     <div class="mb-6">
       <div class="flex items-center justify-between mb-4">
         <h3 class="text-xl font-bold text-fresh-green">Top Selling Products</h3>
-        <a href="#" class="text-green-600 hover:text-green-700 text-sm font-medium">View All</a>
+        <a href="products-listing.html" class="text-green-600 hover:text-green-700 text-sm font-medium">View All</a>
       </div>
       <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         <!-- Product Card 1 -->
-        <a href="product-detail.html" class="dashboard-card bg-white rounded-lg shadow-sm border border-green-100 p-3 block hover:shadow-md transition-all">
+        <div class="dashboard-card bg-white rounded-lg shadow-sm border border-green-100 p-3 block hover:shadow-md transition-all cursor-pointer" onclick="redirectToProduct('organic-tomatoes')">
           <div class="bg-green-50 rounded-lg p-3 mb-3 flex items-center justify-center h-24">
             <svg class="w-12 h-12 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
@@ -297,16 +375,25 @@
           <p class="text-xs text-gray-600 mb-2">Green Valley Farm</p>
           <div class="flex items-center justify-between">
             <span class="text-green-600 font-bold text-sm">$4.99/lb</span>
-            <button onclick="event.preventDefault(); addToCart('tomatoes')" class="bg-green-100 text-green-600 p-1 rounded-lg hover:bg-green-200 transition-colors">
+            <button onclick="event.stopPropagation(); addToCart('organic-tomatoes')" class="bg-green-100 text-green-600 p-1 rounded-lg hover:bg-green-200 transition-colors">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
               </svg>
             </button>
           </div>
-        </a>
+          <div class="mt-2">
+            <div class="flex items-center space-x-1">
+              <span class="text-yellow-400 text-xs">★★★★★</span>
+              <span class="text-xs text-gray-500">(4.9)</span>
+            </div>
+            <div class="bg-green-100 rounded-full px-2 py-1 text-xs text-green-700 mt-1 inline-block">
+              #1 Bestseller
+            </div>
+          </div>
+        </div>
 
         <!-- Product Card 2 -->
-        <a href="product-detail.html" class="dashboard-card bg-white rounded-lg shadow-sm border border-green-100 p-3 block hover:shadow-md transition-all">
+        <div class="dashboard-card bg-white rounded-lg shadow-sm border border-green-100 p-3 block hover:shadow-md transition-all cursor-pointer" onclick="redirectToProduct('fresh-apples')">
           <div class="bg-orange-50 rounded-lg p-3 mb-3 flex items-center justify-center h-24">
             <svg class="w-12 h-12 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/>
@@ -316,16 +403,25 @@
           <p class="text-xs text-gray-600 mb-2">Sunrise Orchard</p>
           <div class="flex items-center justify-between">
             <span class="text-green-600 font-bold text-sm">$3.49/lb</span>
-            <button onclick="event.preventDefault(); addToCart('apples')" class="bg-green-100 text-green-600 p-1 rounded-lg hover:bg-green-200 transition-colors">
+            <button onclick="event.stopPropagation(); addToCart('fresh-apples')" class="bg-green-100 text-green-600 p-1 rounded-lg hover:bg-green-200 transition-colors">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
               </svg>
             </button>
           </div>
-        </a>
+          <div class="mt-2">
+            <div class="flex items-center space-x-1">
+              <span class="text-yellow-400 text-xs">★★★★★</span>
+              <span class="text-xs text-gray-500">(4.8)</span>
+            </div>
+            <div class="bg-orange-100 rounded-full px-2 py-1 text-xs text-orange-700 mt-1 inline-block">
+              #2 Bestseller
+            </div>
+          </div>
+        </div>
 
         <!-- Product Card 3 -->
-        <a href="product-detail.html" class="dashboard-card bg-white rounded-lg shadow-sm border border-green-100 p-3 block hover:shadow-md transition-all">
+        <div class="dashboard-card bg-white rounded-lg shadow-sm border border-green-100 p-3 block hover:shadow-md transition-all cursor-pointer" onclick="redirectToProduct('farm-fresh-milk')">
           <div class="bg-blue-50 rounded-lg p-3 mb-3 flex items-center justify-center h-24">
             <svg class="w-12 h-12 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
@@ -335,16 +431,25 @@
           <p class="text-xs text-gray-600 mb-2">Mountain Dairy</p>
           <div class="flex items-center justify-between">
             <span class="text-green-600 font-bold text-sm">$5.99/gal</span>
-            <button onclick="event.preventDefault(); addToCart('milk')" class="bg-green-100 text-green-600 p-1 rounded-lg hover:bg-green-200 transition-colors">
+            <button onclick="event.stopPropagation(); addToCart('farm-fresh-milk')" class="bg-green-100 text-green-600 p-1 rounded-lg hover:bg-green-200 transition-colors">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
               </svg>
             </button>
           </div>
-        </a>
+          <div class="mt-2">
+            <div class="flex items-center space-x-1">
+              <span class="text-yellow-400 text-xs">★★★★★</span>
+              <span class="text-xs text-gray-500">(4.7)</span>
+            </div>
+            <div class="bg-blue-100 rounded-full px-2 py-1 text-xs text-blue-700 mt-1 inline-block">
+              #3 Bestseller
+            </div>
+          </div>
+        </div>
 
         <!-- Product Card 4 -->
-        <a href="product-detail.html" class="dashboard-card bg-white rounded-lg shadow-sm border border-green-100 p-3 block hover:shadow-md transition-all">
+        <div class="dashboard-card bg-white rounded-lg shadow-sm border border-green-100 p-3 block hover:shadow-md transition-all cursor-pointer" onclick="redirectToProduct('organic-carrots')">
           <div class="bg-purple-50 rounded-lg p-3 mb-3 flex items-center justify-center h-24">
             <svg class="w-12 h-12 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
@@ -354,16 +459,25 @@
           <p class="text-xs text-gray-600 mb-2">Green Valley Farm</p>
           <div class="flex items-center justify-between">
             <span class="text-green-600 font-bold text-sm">$2.99/lb</span>
-            <button onclick="event.preventDefault(); addToCart('carrots')" class="bg-green-100 text-green-600 p-1 rounded-lg hover:bg-green-200 transition-colors">
+            <button onclick="event.stopPropagation(); addToCart('organic-carrots')" class="bg-green-100 text-green-600 p-1 rounded-lg hover:bg-green-200 transition-colors">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
               </svg>
             </button>
           </div>
-        </a>
+          <div class="mt-2">
+            <div class="flex items-center space-x-1">
+              <span class="text-yellow-400 text-xs">★★★★☆</span>
+              <span class="text-xs text-gray-500">(4.5)</span>
+            </div>
+            <div class="bg-purple-100 rounded-full px-2 py-1 text-xs text-purple-700 mt-1 inline-block">
+              #4 Bestseller
+            </div>
+          </div>
+        </div>
 
         <!-- Product Card 5 -->
-        <a href="product-detail.html" class="dashboard-card bg-white rounded-lg shadow-sm border border-green-100 p-3 block hover:shadow-md transition-all">
+        <div class="dashboard-card bg-white rounded-lg shadow-sm border border-green-100 p-3 block hover:shadow-md transition-all cursor-pointer" onclick="redirectToProduct('fresh-strawberries')">
           <div class="bg-red-50 rounded-lg p-3 mb-3 flex items-center justify-center h-24">
             <svg class="w-12 h-12 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
@@ -373,13 +487,22 @@
           <p class="text-xs text-gray-600 mb-2">Sunrise Orchard</p>
           <div class="flex items-center justify-between">
             <span class="text-green-600 font-bold text-sm">$6.99/lb</span>
-            <button onclick="event.preventDefault(); addToCart('strawberries')" class="bg-green-100 text-green-600 p-1 rounded-lg hover:bg-green-200 transition-colors">
+            <button onclick="event.stopPropagation(); addToCart('fresh-strawberries')" class="bg-green-100 text-green-600 p-1 rounded-lg hover:bg-green-200 transition-colors">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
               </svg>
             </button>
           </div>
-        </a>
+          <div class="mt-2">
+            <div class="flex items-center space-x-1">
+              <span class="text-yellow-400 text-xs">★★★★★</span>
+              <span class="text-xs text-gray-500">(4.9)</span>
+            </div>
+            <div class="bg-red-100 rounded-full px-2 py-1 text-xs text-red-700 mt-1 inline-block">
+              #5 Bestseller
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -395,7 +518,7 @@
           
           <div class="space-y-3">
             <!-- Deal Item 1 -->
-            <div class="flex items-center justify-between p-3 bg-gradient-to-r from-green-50 to-green-100 rounded-lg border border-green-200">
+            <div class="flex items-center justify-between p-3 bg-gradient-to-r from-green-50 to-green-100 rounded-lg border border-green-200 cursor-pointer hover:shadow-md transition-all" onclick="redirectToProduct('organic-bundle-special')">
               <div class="flex items-center space-x-3">
                 <div class="bg-green-200 p-2 rounded-lg">
                   <svg class="w-6 h-6 text-green-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -410,14 +533,14 @@
               <div class="text-right">
                 <p class="text-lg font-bold text-fresh-green">$19.99</p>
                 <p class="text-sm text-gray-500 line-through">$29.99</p>
-                <button class="bg-green-600 text-white px-4 py-1 rounded-lg text-sm hover:bg-green-700 transition-colors mt-1">
+                <button onclick="event.stopPropagation(); addToCart('organic-bundle-special')" class="bg-green-600 text-white px-4 py-1 rounded-lg text-sm hover:bg-green-700 transition-colors mt-1">
                   Add to Cart
                 </button>
               </div>
             </div>
 
             <!-- Deal Item 2 -->
-            <div class="flex items-center justify-between p-3 bg-gradient-to-r from-orange-50 to-orange-100 rounded-lg border border-orange-200">
+            <div class="flex items-center justify-between p-3 bg-gradient-to-r from-orange-50 to-orange-100 rounded-lg border border-orange-200 cursor-pointer hover:shadow-md transition-all" onclick="redirectToProduct('fruit-festival')">
               <div class="flex items-center space-x-3">
                 <div class="bg-orange-200 p-2 rounded-lg">
                   <svg class="w-6 h-6 text-orange-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -432,7 +555,7 @@
               <div class="text-right">
                 <p class="text-lg font-bold text-fresh-green">$24.99</p>
                 <p class="text-sm text-gray-500 line-through">$34.99</p>
-                <button class="bg-green-600 text-white px-4 py-1 rounded-lg text-sm hover:bg-green-700 transition-colors mt-1">
+                <button onclick="event.stopPropagation(); addToCart('fruit-festival')" class="bg-green-600 text-white px-4 py-1 rounded-lg text-sm hover:bg-green-700 transition-colors mt-1">
                   Add to Cart
                 </button>
               </div>
@@ -447,21 +570,21 @@
         <div class="bg-white rounded-lg shadow-sm border border-green-100 p-4">
           <h3 class="text-lg font-semibold text-fresh-green mb-3">Quick Actions</h3>
           <div class="space-y-2">
-            <button class="w-full bg-green-600 hover:bg-green-700 text-white p-3 rounded-lg text-left flex items-center space-x-2 transition-colors">
+            <button onclick="browseAllProducts()" class="w-full bg-green-600 hover:bg-green-700 text-white p-3 rounded-lg text-left flex items-center space-x-2 transition-colors">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
               </svg>
               <span class="text-sm">Browse All Products</span>
             </button>
             
-            <button class="w-full bg-green-500 hover:bg-green-600 text-white p-3 rounded-lg text-left flex items-center space-x-2 transition-colors">
+            <button onclick="findFarmers()" class="w-full bg-green-500 hover:bg-green-600 text-white p-3 rounded-lg text-left flex items-center space-x-2 transition-colors">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
               </svg>
               <span class="text-sm">Find Farmers</span>
             </button>
             
-            <button class="w-full bg-green-400 hover:bg-green-500 text-white p-3 rounded-lg text-left flex items-center space-x-2 transition-colors">
+            <button onclick="viewMyOrders()" class="w-full bg-green-400 hover:bg-green-500 text-white p-3 rounded-lg text-left flex items-center space-x-2 transition-colors">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
               </svg>
@@ -471,7 +594,7 @@
         </div>
 
         <!-- Top Sellers Badge -->
-        <div class="bg-gradient-to-br from-yellow-400 to-orange-500 rounded-lg p-4 text-white text-center">
+        <div class="bg-gradient-to-br from-yellow-400 to-orange-500 rounded-lg p-4 text-white text-center cursor-pointer hover:shadow-lg transition-all" onclick="redirectToFarmer('green-valley-farm')">
           <div class="text-2xl mb-2">🏆</div>
           <h4 class="font-bold text-lg mb-1">Top Seller</h4>
           <p class="text-sm opacity-90 mb-2">Green Valley Farm</p>
@@ -479,6 +602,9 @@
             <p class="text-xs font-medium">1,200+ Products Sold</p>
             <p class="text-xs">This Month</p>
           </div>
+          <button onclick="event.stopPropagation(); redirectToFarmerProducts('green-valley-farm')" class="bg-white text-orange-600 px-3 py-1 rounded-lg text-xs font-medium mt-2 hover:bg-gray-100 transition-colors">
+            View Store
+          </button>
         </div>
       </div>
     </div>
@@ -500,9 +626,63 @@
   </footer>
 
   <script>
-    function addToCart(product) {
+    // Banner rotation functionality
+    let currentBanner = 0;
+    const banners = document.querySelectorAll('.ad-slide');
+    const dots = document.querySelectorAll('.banner-dot');
+    
+    function showBanner(index) {
+      // Hide all banners
+      banners.forEach(banner => banner.classList.remove('active'));
+      dots.forEach(dot => dot.classList.remove('active'));
+      
+      // Show selected banner
+      banners[index].classList.add('active');
+      dots[index].classList.add('active');
+      currentBanner = index;
+    }
+    
+    function nextBanner() {
+      currentBanner = (currentBanner + 1) % banners.length;
+      showBanner(currentBanner);
+    }
+    
+    // Auto-rotate banners every 5 seconds
+    setInterval(nextBanner, 5000);
+    
+    // Product redirect functions
+    function redirectToProduct(productId) {
+      // In a real app, this would navigate to the product detail page
+      console.log('Redirecting to product:', productId);
+      window.location.href = `product-detail.html?id=${productId}`;
+    }
+    
+    // Farmer redirect functions
+    function redirectToFarmer(farmerId) {
+      console.log('Redirecting to farmer profile:', farmerId);
+      window.location.href = `farmer-profile.html?id=${farmerId}`;
+    }
+    
+    function redirectToFarmerProducts(farmerId) {
+      console.log('Redirecting to farmer products:', farmerId);
+      window.location.href = `farmer-products.html?id=${farmerId}`;
+    }
+    
+    // Enhanced add to cart function
+    function addToCart(productId) {
       // Simple add to cart functionality
-      alert(`Added ${product} to cart!`);
+      console.log(`Added ${productId} to cart!`);
+      
+      // Show success message
+      const message = document.createElement('div');
+      message.className = 'fixed top-4 right-4 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg z-50';
+      message.textContent = `Added ${productId.replace('-', ' ')} to cart!`;
+      document.body.appendChild(message);
+      
+      // Remove message after 3 seconds
+      setTimeout(() => {
+        message.remove();
+      }, 3000);
       
       // Update cart count
       const cartBadge = document.querySelector('.bg-green-500');
@@ -511,6 +691,34 @@
         cartBadge.textContent = currentCount + 1;
       }
     }
+    
+    // Quick action functions
+    function browseAllProducts() {
+      window.location.href = 'products-listing.html';
+    }
+    
+    function findFarmers() {
+      window.location.href = 'farmers-listing.html';
+    }
+    
+    function viewMyOrders() {
+      window.location.href = 'my-orders.html';
+    }
+    
+    // Search functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const searchInput = document.querySelector('input[placeholder="Search..."]');
+      if (searchInput) {
+        searchInput.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+            const searchQuery = this.value.trim();
+            if (searchQuery) {
+              window.location.href = `search-results.html?q=${encodeURIComponent(searchQuery)}`;
+            }
+          }
+        });
+      }
+    });
   </script>
 </body>
 </html>
